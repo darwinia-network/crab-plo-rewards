@@ -32,10 +32,10 @@ function App() {
   return (
     <div className='container mx-auto pt-10'>
       <div className='flex justify-end items-center mb-6 space-x-2'>
-        <Button className='rounded-md' onClick={handleClickFetchAll} disabled={data?.crowdloanWhoStatistics?.pageInfo?.hasNextPage === false}>
+        <Button className='rounded-md' onClick={handleClickFetchAll} disabled={data?.crowdloanWhoStatistics?.pageInfo?.hasNextPage === false} loading={loading} type='primary'>
           Fetch All ({data?.crowdloanWhoStatistics?.nodes.length}/{data?.crowdloanWhoStatistics?.totalCount})
         </Button>
-        <Button className='rounded-md' onClick={handleClickDownload} disabled={csvRows.length === 0}>Download CSV</Button>
+        <Button className='rounded-md' onClick={handleClickDownload} disabled={csvRows.length === 0} loading={loading}>Download CSV</Button>
       </div>
 
       <RewardsTable
