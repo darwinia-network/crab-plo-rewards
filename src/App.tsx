@@ -45,7 +45,11 @@ function App() {
         loading={loading}
         dataSource={rewardsTableDataSource}
       />
-      <p className='absolute top-auto bottom-4 w-full text-center'><span>Copyright © 2022</span></p>
+      <p className='absolute top-auto bottom-4 w-full text-center space-x-3'>
+        <span>Copyright©2022</span>
+        <span>|</span>
+        <a href='https://github.com/darwinia-network/crab-plo-rewards' target='_blank' rel='noopener noreferrer'>Github</a>
+      </p>
     </div>
   );
 }
