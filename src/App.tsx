@@ -37,10 +37,10 @@ function App() {
     <div className='container mx-auto pt-10 h-screen relative pb-14'>
       <div className='flex items-end justify-end space-x-24 mb-8'>
         <div className='flex items-center space-x-6'>
-          <Statistic title="Total Current CRAB" value={totalCurrentCRab.toFixed(8)} />
-          <Statistic title="Total Current CKTON" value={totalCurrentCKton.toFixed(8)} />
-          <Statistic title="Total Stage CRAB" value={totalStageCRab.toFixed(8)} />
-          <Statistic title="Total Stage CKTON" value={totalStageCKTON.toFixed(8)} />
+          <Statistic loading={loading} title="Total Current CRAB" value={totalCurrentCRab.toFixed(8)} />
+          <Statistic loading={loading} title="Total Current CKTON" value={totalCurrentCKton.toFixed(8)} />
+          <Statistic loading={loading} title="Total Stage CRAB" value={totalStageCRab.toFixed(8)} />
+          <Statistic loading={loading} title="Total Stage CKTON" value={totalStageCKTON.toFixed(8)} />
         </div>
 
         <div className='flex justify-end items-end space-x-2'>
