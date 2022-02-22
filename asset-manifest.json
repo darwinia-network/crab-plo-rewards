@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/crab-plo-rewards/static/css/main.98903c4c.css",
-    "main.js": "/crab-plo-rewards/static/js/main.69fd8210.js",
+    "main.css": "/crab-plo-rewards/static/css/main.b877666f.css",
+    "main.js": "/crab-plo-rewards/static/js/main.7ec96fa6.js",
     "static/js/787.85ea96f7.chunk.js": "/crab-plo-rewards/static/js/787.85ea96f7.chunk.js",
     "index.html": "/crab-plo-rewards/index.html",
-    "main.98903c4c.css.map": "/crab-plo-rewards/static/css/main.98903c4c.css.map",
-    "main.69fd8210.js.map": "/crab-plo-rewards/static/js/main.69fd8210.js.map",
+    "main.b877666f.css.map": "/crab-plo-rewards/static/css/main.b877666f.css.map",
+    "main.7ec96fa6.js.map": "/crab-plo-rewards/static/js/main.7ec96fa6.js.map",
     "787.85ea96f7.chunk.js.map": "/crab-plo-rewards/static/js/787.85ea96f7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.98903c4c.css",
-    "static/js/main.69fd8210.js"
+    "static/css/main.b877666f.css",
+    "static/js/main.7ec96fa6.js"
   ]
 }
