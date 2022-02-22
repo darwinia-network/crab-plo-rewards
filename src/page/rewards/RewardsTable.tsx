@@ -60,7 +60,7 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
 const Component: React.FC<TypePros> = (props) => {
   const { dataSource, loading } = props;
   return (
-    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} scroll={{ y: '70vh', x: 'max-content' }} />
+    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} scroll={{ y: 'calc(100vh - 20rem)', x: 'max-content' }} />
   );
 };
 
