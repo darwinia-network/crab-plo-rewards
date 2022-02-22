@@ -20,6 +20,10 @@ export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'da
 };
 
 export const getCsvRowsAndTableData = (nodes: TypeGetUsersContributePowerNode[]) => {
+  let totalCurrentCRab = Big(0);
+  let totalCurrentCKton = Big(0);
+  let totalStageCRab = Big(0);
+  let totalStageCKTON = Big(0);
   const csvRows: string[][] = [];
   const rewardsTableDataSource: TypeRewardsTableDataSource[] = [];
 
@@ -29,6 +33,11 @@ export const getCsvRowsAndTableData = (nodes: TypeGetUsersContributePowerNode[])
     const currentCKtonReward = share.times(CKTON_REWARD);
     const stageCRabReward = currentCRabReward.times(0.1);
     const stageCKtonReward = currentCKtonReward.times(0.1);
+
+    totalCurrentCRab = totalCurrentCRab.add(currentCRabReward);
+    totalCurrentCKton = totalCurrentCKton.add(currentCKtonReward);
+    totalStageCRab = totalStageCRab.add(stageCRabReward);
+    totalStageCKTON = totalStageCKTON.add(stageCKtonReward);
 
     csvRows.push([value.user, 'ring', stageCRabReward.toFixed(8), 'kusama']);
     csvRows.push([value.user, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
@@ -44,5 +53,9 @@ export const getCsvRowsAndTableData = (nodes: TypeGetUsersContributePowerNode[])
     });
   });
 
-  return { csvRows, rewardsTableDataSource };
+  return {
+    csvRows, rewardsTableDataSource,
+    totalCurrentCRab, totalCurrentCKton,
+    totalStageCRab, totalStageCKTON,
+  };
 }
