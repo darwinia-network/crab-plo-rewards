@@ -1,6 +1,11 @@
 export type TypeGetUsersContributePowerNode = {
   user: string;
   totalPower: string;
+  contributors: {
+    nodes: {
+      powerRefer: string;
+    }[];
+  };
 };
 
 export type TypeRewardsTableDataSource = {

@@ -28,7 +28,8 @@ export const getCsvRowsAndTableData = (nodes: TypeGetUsersContributePowerNode[])
   const rewardsTableDataSource: TypeRewardsTableDataSource[] = [];
 
   nodes?.forEach((value: TypeGetUsersContributePowerNode, index: number) => {
-    const share = Big(value.totalPower).div(GLOBAL_TOTAL_CONTRIBUTE_POWER);
+    const referPower = value.contributors.nodes.reduce((previous, current) => Big(previous).add(current.powerRefer).toString(), '0');
+    const share = Big(value.totalPower).add(referPower).div(GLOBAL_TOTAL_CONTRIBUTE_POWER);
     const currentCRabReward = share.times(CRAB_REWARD);
     const currentCKtonReward = share.times(CKTON_REWARD);
     const stageCRabReward = currentCRabReward.times(0.1);
