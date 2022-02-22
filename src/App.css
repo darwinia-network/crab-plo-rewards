@@ -14,3 +14,9 @@
 .ant-btn-primary {
   background: #1890ff;
 }
+
+.nav-link {
+  background-image: url('../public/img/arrow-right.jpeg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}

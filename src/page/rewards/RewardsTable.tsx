@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import type { TypeRewardsTableDataSource } from '../type';
+import type { TypeRewardsTableDataSource } from '../../type';
 
 type TypePros = {
   loading: boolean;
