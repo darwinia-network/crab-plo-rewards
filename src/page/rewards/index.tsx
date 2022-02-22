@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Statistic } from 'antd';
+import { Button, Statistic, Breadcrumb } from 'antd';
 import { useQuery } from "@apollo/client";
 import { RewardsTable } from './RewardsTable';
 import { downloadCsv, getCsvRowsAndTableData } from '../../utils';
@@ -34,7 +34,7 @@ const Page: React.FC = () => {
 
   return (
     <div className='container mx-auto pt-10 h-screen relative pb-14'>
-      <div className='flex items-end justify-end space-x-24 mb-8'>
+      <div className='flex items-end justify-end space-x-24 mb-2'>
         <div className='flex items-center space-x-6'>
           <Statistic loading={loading} title="Total Current CRAB" value={totalCurrentCRab.toFixed(8)} />
           <Statistic loading={loading} title="Total Current CKTON" value={totalCurrentCKton.toFixed(8)} />
@@ -49,6 +49,11 @@ const Page: React.FC = () => {
           <Button className='rounded-md' onClick={handleClickDownload} disabled={csvRows.length === 0} loading={loading}>Download CSV</Button>
         </div>
       </div>
+
+      <Breadcrumb className='pl-px pb-1'>
+        <Breadcrumb.Item href={process.env.PUBLIC_URL}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item>Rewards</Breadcrumb.Item>
+      </Breadcrumb>
 
       <RewardsTable
         loading={loading}
