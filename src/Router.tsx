@@ -10,6 +10,12 @@ const rewardsGqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const NftPageWithGql: React.FC = () => (
+  <ApolloProvider client={rewardsGqlClient}>
+    <NftPage />
+  </ApolloProvider>
+);
+
 const RewardsPageWithGql: React.FC = () => (
   <ApolloProvider client={rewardsGqlClient}>
     <RewardsPage />
@@ -19,8 +25,8 @@ const RewardsPageWithGql: React.FC = () => (
 export const Router: React.FC = () => (
   <Routes>
     <Route index element={<HomePage />} />
+    <Route path='nft' element={<NftPageWithGql />} />
     <Route path='rewards' element={<RewardsPageWithGql />} />
-    <Route path='nft' element={<NftPage />} />
     <Route path='*' element={<p className='py-1 px-2'>There's nothing here !</p>} />
   </Routes>
 );

@@ -3,13 +3,13 @@ import { Button, Statistic, Breadcrumb } from 'antd';
 import { useQuery } from "@apollo/client";
 import { RewardsTable } from './RewardsTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
-import { downloadCsv, getCsvRowsAndTableData } from '../../utils';
+import { downloadCsv, transformRewardsData } from '../../utils';
 import { GET_USERS_CONTRIBUTE_POWER } from '../../config';
 
 const Page: React.FC = () => {
   const { loading, error, data, refetch } = useQuery(GET_USERS_CONTRIBUTE_POWER, {
     variables: {
-      first: 20,
+      first: 2,
       offset: 0,
     },
     notifyOnNetworkStatusChange: true,
@@ -23,7 +23,7 @@ const Page: React.FC = () => {
     csvRows, rewardsTableDataSource,
     totalCurrentCRab, totalCurrentCKton,
     totalStageCRab, totalStageCKTON
-  } = getCsvRowsAndTableData(data?.crowdloanWhoStatistics?.nodes || []);
+  } = transformRewardsData(data?.crowdloanWhoStatistics?.nodes || []);
 
   const handleClickFetchAll = () => {
     refetch({ first: 6, offset: 0 });

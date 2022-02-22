@@ -1,19 +1,13 @@
 import React from 'react';
 import { Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import { shortAddress } from '../../utils';
 import type { TypeRewardsTableDataSource } from '../../type';
 
 type TypePros = {
   loading: boolean;
   dataSource: TypeRewardsTableDataSource[];
 }
-
-const shortAddress = (address = "") => {
-  if (address.length && address.length > 12) {
-    return `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
-  }
-  return address;
-};
 
 const columns: ColumnsType<TypeRewardsTableDataSource> = [
   {

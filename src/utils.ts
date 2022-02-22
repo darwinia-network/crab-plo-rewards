@@ -1,6 +1,13 @@
 import Big from 'big.js';
-import { CRAB_REWARD, CKTON_REWARD, GLOBAL_TOTAL_CONTRIBUTE_POWER } from './config';
-import type { TypeGetUsersContributePowerNode, TypeRewardsTableDataSource } from './type';
+import { CRAB_REWARD, CKTON_REWARD, GLOBAL_TOTAL_CONTRIBUTE_POWER, KSM_PRECISIONS } from './config';
+import type { TypeGetUsersContributePowerNode, TypeGetUsersContributeBalanceNode, TypeRewardsTableDataSource, TypeNftTableDataSource } from './type';
+
+export const shortAddress = (address = "") => {
+  if (address.length && address.length > 12) {
+    return `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
+  }
+  return address;
+};
 
 export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'data:text/csv;charset=utf-8') => {
   const file = new Blob(["\ufeff" + data], { type: type });
@@ -19,7 +26,7 @@ export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'da
   }, 0);
 };
 
-export const getCsvRowsAndTableData = (nodes: TypeGetUsersContributePowerNode[]) => {
+export const transformRewardsData = (nodes: TypeGetUsersContributePowerNode[]) => {
   let totalCurrentCRab = Big(0);
   let totalCurrentCKton = Big(0);
   let totalStageCRab = Big(0);
@@ -59,4 +66,34 @@ export const getCsvRowsAndTableData = (nodes: TypeGetUsersContributePowerNode[])
     totalCurrentCRab, totalCurrentCKton,
     totalStageCRab, totalStageCKTON,
   };
-}
+};
+
+export const transformNftsData = (nodes: TypeGetUsersContributeBalanceNode[]) => {
+  const csvRows: string[][] = [];
+  let nftTableDataSource: TypeNftTableDataSource[] = [];
+
+  nodes?.forEach((value: TypeGetUsersContributeBalanceNode, index: number) => {
+    const contribute = Big(value.totalBalance);
+    if (contribute.gte(KSM_PRECISIONS)) {
+      nftTableDataSource.push({
+        key: index,
+        index: index,
+        address: value.user,
+        ksmContribute: contribute.div(KSM_PRECISIONS).toFixed(8),
+        claimAddress: 'Todo',
+        isClaimed: false,
+      });
+      csvRows.push([value.user, value.totalBalance]);
+    }
+  });
+
+  nftTableDataSource = nftTableDataSource.map((value, index) => ({
+    ...value,
+    key: index,
+    index: nftTableDataSource.length - index,
+  }));
+
+  return {
+    csvRows, nftTableDataSource,
+  };
+};
