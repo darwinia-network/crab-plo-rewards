@@ -70,4 +70,4 @@ const Page: React.FC = () => {
   );
 };
 
-export const RewardsPage = React.memo(Page);
+export default React.memo(Page);

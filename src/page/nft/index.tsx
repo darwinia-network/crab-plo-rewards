@@ -89,4 +89,4 @@ const Page: React.FC = () => {
   );
 };
 
-export const NftPage = React.memo(Page);
+export default React.memo(Page);
