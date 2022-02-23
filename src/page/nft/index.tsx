@@ -83,7 +83,7 @@ const Page: React.FC = () => {
         </div>
         <Breadcrumb className='pl-px pb-1'>
           <Breadcrumb.Item className='antd-breadcrumb-item' onClick={() => navigate('/')}>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>Rewards</Breadcrumb.Item>
+          <Breadcrumb.Item>NFT</Breadcrumb.Item>
         </Breadcrumb>
         <NftTable loading={loading} dataSource={nftTableDataSource} />
       </PageContent>
