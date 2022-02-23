@@ -38,7 +38,7 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
             {shortAddress(text.address)}
           </Typography.Text>
           <span>·</span>
-          <Typography.Link target={'_blank'} href={`https://kusama.subscan.io/extrinsic/${text.extrinsicHash}`}>Extrinsic</Typography.Link>
+          <Typography.Link target={'_blank'} href={`https://kusama.subscan.io/extrinsic/${text.extrinsicHash}`}>extrinsic</Typography.Link>
         </div>
       ) : (<Typography.Text >None</Typography.Text>)
     ),
@@ -51,6 +51,14 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
     render: (bool: boolean) => (
       <Typography.Text type={bool ? 'success' : 'secondary'}>{bool ? 'Yes' : 'No'}</Typography.Text>
     ),
+    filters: [{
+      text: 'Yes',
+      value: true,
+    }, {
+      text: 'No',
+      value: false,
+    }],
+    onFilter: (value, record) => record.isClaimed === value,
   },
   {
     title: 'KSM Conntribute',
