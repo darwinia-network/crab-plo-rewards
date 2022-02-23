@@ -9,7 +9,7 @@ import { GET_USERS_CONTRIBUTE_POWER } from '../../config';
 const Page: React.FC = () => {
   const { loading, error, data, refetch } = useQuery(GET_USERS_CONTRIBUTE_POWER, {
     variables: {
-      first: 2,
+      first: 10,
       offset: 0,
     },
     notifyOnNetworkStatusChange: true,
@@ -26,7 +26,7 @@ const Page: React.FC = () => {
   } = transformRewardsData(data?.crowdloanWhoStatistics?.nodes || []);
 
   const handleClickFetchAll = () => {
-    refetch({ first: 6, offset: 0 });
+    refetch({ first: 0, offset: 0 });
   }
 
   const handleClickDownload = () => {

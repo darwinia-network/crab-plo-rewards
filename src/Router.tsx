@@ -10,8 +10,13 @@ const rewardsGqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const nftClaimGqlClient = new ApolloClient({
+  uri: "https://api.subquery.network/sq/darwinia-network/crab-plo-nft__ZGFyd",
+  cache: new InMemoryCache(),
+});
+
 const NftPageWithGql: React.FC = () => (
-  <ApolloProvider client={rewardsGqlClient}>
+  <ApolloProvider client={nftClaimGqlClient}>
     <NftPage />
   </ApolloProvider>
 );

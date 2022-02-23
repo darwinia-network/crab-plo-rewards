@@ -30,12 +30,18 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
     dataIndex: 'claimAddress',
     key: 'claimAddress',
     align: 'center',
-    render: (text: string) => (
-      <Typography.Text copyable={{ text: text }}>{shortAddress(text)}</Typography.Text>
+    render: (text: { address: string, extrinsicHash: string } | null) => (
+      text ? (
+        <div className='inline-flex space-x-1'>
+          <Typography.Text copyable={{ text: text.address }}>{shortAddress(text.address)}</Typography.Text>
+          <span>·</span>
+          <Typography.Link target={'_blank'} href={`https://kusama.subscan.io/extrinsic/${text.extrinsicHash}`}>Extrinsic</Typography.Link>
+        </div>
+      ) : (<Typography.Text >None</Typography.Text>)
     ),
   },
   {
-    title: 'Is Claim',
+    title: 'Is Claimed',
     dataIndex: 'isClaimed',
     key: 'isClaimed',
     align: 'center',

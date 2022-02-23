@@ -30,13 +30,14 @@ export const GET_USERS_CONTRIBUTE_POWER = gql`
   }
 `;
 
-export const GET_USERS_CONTRIBUTE_BALANCE = gql`
-  query GetUsersContributeBalance($first: Int! = 0, $offset: Int! = 0) {
-    crowdloanWhoStatistics(orderBy: TOTAL_BALANCE_DESC, first: $first, offset: $offset) {
+export const GET_USER_NFT_CLAIMED = gql`
+  query GetUserNftClaimed($user: String!) {
+    remarkedNftAddresses(filter: {signer: {equalTo: $user}}, orderBy: [EXTRINSIC_TIMESTAMP_ASC], first: 1) {
       totalCount
       nodes {
-        user
-        totalBalance
+        signer
+        addressValue
+        extrinsicHash
       }
     }
   }

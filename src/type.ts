@@ -8,9 +8,10 @@ export type TypeGetUsersContributePowerNode = {
   };
 };
 
-export type TypeGetUsersContributeBalanceNode = {
-  user: string;
-  totalBalance: string;
+export type TypeGetUserNftClaimedNode = {
+  signer: string;
+  addressValue: string;
+  extrinsicHash: string;
 };
 
 export type TypeRewardsTableDataSource = {
@@ -28,6 +29,6 @@ export type TypeNftTableDataSource = {
   index: number;
   address: string;
   ksmContribute: string;
-  claimAddress: string;
+  claimAddress: { address: string, extrinsicHash: string } | null;
   isClaimed: boolean;
 };

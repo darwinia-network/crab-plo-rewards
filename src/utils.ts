@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import { CRAB_REWARD, CKTON_REWARD, GLOBAL_TOTAL_CONTRIBUTE_POWER, KSM_PRECISIONS } from './config';
-import type { TypeGetUsersContributePowerNode, TypeGetUsersContributeBalanceNode, TypeRewardsTableDataSource, TypeNftTableDataSource } from './type';
+import type { TypeGetUsersContributePowerNode, TypeGetUserNftClaimedNode, TypeRewardsTableDataSource, TypeNftTableDataSource } from './type';
 
 export const shortAddress = (address = "") => {
   if (address.length && address.length > 12) {
@@ -68,22 +68,22 @@ export const transformRewardsData = (nodes: TypeGetUsersContributePowerNode[]) =
   };
 };
 
-export const transformNftsData = (nodes: TypeGetUsersContributeBalanceNode[]) => {
+export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[]) => {
   const csvRows: string[][] = [];
   let nftTableDataSource: TypeNftTableDataSource[] = [];
 
-  nodes?.forEach((value: TypeGetUsersContributeBalanceNode, index: number) => {
-    const contribute = Big(value.totalBalance);
+  data?.forEach((value: string[], index: number) => {
+    const contribute = Big(value[1]);
     if (contribute.gte(KSM_PRECISIONS)) {
       nftTableDataSource.push({
         key: index,
         index: index,
-        address: value.user,
+        address: value[0],
         ksmContribute: contribute.div(KSM_PRECISIONS).toFixed(8),
-        claimAddress: 'Todo',
-        isClaimed: false,
+        claimAddress: nodes.length && nodes[0].signer === value[0] ? { address: nodes[0].addressValue, extrinsicHash: nodes[0].extrinsicHash } : null,
+        isClaimed: nodes.length && nodes[0].signer === value[0] ? true : false,
       });
-      csvRows.push([value.user, value.totalBalance]);
+      csvRows.push([value[0], value[1]]);
     }
   });
 
