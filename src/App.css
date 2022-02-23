@@ -15,6 +15,16 @@
   background: #1890ff;
 }
 
+.antd-breadcrumb-item {
+  transition: all 0.3s;
+
+}
+
+.antd-breadcrumb-item:hover {
+  color: #40a9ff;
+  cursor: pointer;
+}
+
 .page-content-height {
   height: calc(100vh - 5rem);
 }

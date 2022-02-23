@@ -5,8 +5,10 @@ import { RewardsTable } from './RewardsTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { downloadCsv, transformRewardsData } from '../../utils';
 import { GET_USERS_CONTRIBUTE_POWER } from '../../config';
+import { useNavigate } from 'react-router-dom';
 
 const Page: React.FC = () => {
+  const navigate = useNavigate();
   const { loading, error, data, refetch } = useQuery(GET_USERS_CONTRIBUTE_POWER, {
     variables: {
       first: 10,
@@ -53,7 +55,7 @@ const Page: React.FC = () => {
         </div>
 
         <Breadcrumb className='pl-px pb-1'>
-          <Breadcrumb.Item href={process.env.PUBLIC_URL}>Home</Breadcrumb.Item>
+          <Breadcrumb.Item className='antd-breadcrumb-item' onClick={() => navigate('/')}>Home</Breadcrumb.Item>
           <Breadcrumb.Item>Rewards</Breadcrumb.Item>
         </Breadcrumb>
 

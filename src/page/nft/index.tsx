@@ -7,8 +7,10 @@ import { downloadCsv, transformNftsData } from '../../utils';
 import { Button, Statistic, Breadcrumb } from 'antd';
 import { data as nftEligibleData } from './data';
 import type { TypeGetUserNftClaimedNode } from '../../type';
+import { useNavigate } from 'react-router-dom';
 
 const Page: React.FC = () => {
+  const navigate = useNavigate();
   const client = useApolloClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApolloError | undefined>(undefined);
@@ -69,8 +71,8 @@ const Page: React.FC = () => {
           </div>
         </div>
         <Breadcrumb className='pl-px pb-1'>
-          <Breadcrumb.Item href={process.env.PUBLIC_URL}>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>NFT</Breadcrumb.Item>
+          <Breadcrumb.Item className='antd-breadcrumb-item' onClick={() => navigate('/')}>Home</Breadcrumb.Item>
+          <Breadcrumb.Item>Rewards</Breadcrumb.Item>
         </Breadcrumb>
         <NftTable loading={loading} dataSource={nftTableDataSource} />
       </PageContent>
