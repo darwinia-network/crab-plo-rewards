@@ -16,6 +16,9 @@ export type TypeGetUserNftClaimedNode = {
 
 export type TypeGetUsersNftClaimed = {
   totalCount: number;
+  pageInfo: {
+    hasNextPage: boolean;
+  };
   nodes: TypeGetUserNftClaimedNode[];
 };
 

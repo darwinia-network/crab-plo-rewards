@@ -34,6 +34,9 @@ export const GET_USERS_NFT_CLAIMED = gql`
   query GetUserNftClaimed($first: Int!, $offset: Int!) {
     remarkedNftAddresses(orderBy: [EXTRINSIC_TIMESTAMP_ASC], first: $first, offset: $offset) {
       totalCount
+      pageInfo {
+        hasNextPage
+      }
       nodes {
         signer
         addressValue
