@@ -9,7 +9,7 @@ const rewardsGqlClient = new ApolloClient({
 });
 
 const nftClaimGqlClient = new ApolloClient({
-  uri: "https://api.subquery.network/sq/darwinia-network/crab-plo-nft__ZGFyd",
+  uri: "https://api.subquery.network/sq/darwinia-network/crab-plo-nft",
   cache: new InMemoryCache(),
 });
 
