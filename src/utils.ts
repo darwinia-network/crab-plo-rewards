@@ -1,4 +1,5 @@
 import Big from 'big.js';
+import { ethers } from 'ethers';
 import { CRAB_REWARD, CKTON_REWARD, GLOBAL_TOTAL_CONTRIBUTE_POWER, KSM_PRECISIONS } from './config';
 import type { TypeGetUsersContributePowerNode, TypeGetUserNftClaimedNode, TypeRewardsTableDataSource, TypeNftTableDataSource } from './type';
 
@@ -69,23 +70,21 @@ export const transformRewardsData = (nodes: TypeGetUsersContributePowerNode[]) =
 };
 
 export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[]) => {
-  const csvRows: string[][] = [];
+  const csvRows: string[] = [];
   let nftTableDataSource: TypeNftTableDataSource[] = [];
 
-  data?.forEach((value: string[], index: number) => {
-    const contribute = Big(value[1]);
-    if (contribute.gte(KSM_PRECISIONS)) {
-      nftTableDataSource.push({
-        key: index,
-        index: index,
-        address: value[0],
-        ksmContribute: contribute.div(KSM_PRECISIONS).toFixed(8),
-        claimAddress: nodes.length && nodes[0].signer === value[0] ? { address: nodes[0].addressValue, extrinsicHash: nodes[0].extrinsicHash } : null,
-        isClaimed: nodes.length && nodes[0].signer === value[0] ? true : false,
-      });
-      csvRows.push([value[0], value[1]]);
-    }
-  });
+  for (let value of data) {
+    const claim = nodes?.find(v => v.signer === value[0]);
+    nftTableDataSource.push({
+      key: 0,
+      index: 0,
+      address: value[0],
+      ksmContribute: Big(value[1]).div(KSM_PRECISIONS).toFixed(8),
+      claimAddress: claim ? { address: claim.addressValue, extrinsicHash: claim.extrinsicHash } : null,
+      isClaimed: claim ? true :false,
+    });
+    claim && ethers.utils.isAddress(claim.addressValue) && csvRows.push(claim.addressValue);
+  }
 
   nftTableDataSource = nftTableDataSource.map((value, index) => ({
     ...value,
@@ -97,3 +96,4 @@ export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimed
     csvRows, nftTableDataSource,
   };
 };
+

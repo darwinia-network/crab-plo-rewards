@@ -14,6 +14,11 @@ export type TypeGetUserNftClaimedNode = {
   extrinsicHash: string;
 };
 
+export type TypeGetUsersNftClaimed = {
+  totalCount: number;
+  nodes: TypeGetUserNftClaimedNode[];
+};
+
 export type TypeRewardsTableDataSource = {
   key: number;
   index: number;

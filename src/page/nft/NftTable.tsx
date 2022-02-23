@@ -3,6 +3,7 @@ import { Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { shortAddress } from '../../utils';
 import type { TypeNftTableDataSource } from '../../type';
+import { ethers } from 'ethers';
 
 type TypePros = {
   loading: boolean;
@@ -33,7 +34,9 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
     render: (text: { address: string, extrinsicHash: string } | null) => (
       text ? (
         <div className='inline-flex space-x-1'>
-          <Typography.Text copyable={{ text: text.address }}>{shortAddress(text.address)}</Typography.Text>
+          <Typography.Text copyable={{ text: text.address }} type={ethers.utils.isAddress(text.address) ? 'success' : 'danger'}>
+            {shortAddress(text.address)}
+          </Typography.Text>
           <span>·</span>
           <Typography.Link target={'_blank'} href={`https://kusama.subscan.io/extrinsic/${text.extrinsicHash}`}>Extrinsic</Typography.Link>
         </div>

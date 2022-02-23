@@ -30,9 +30,9 @@ export const GET_USERS_CONTRIBUTE_POWER = gql`
   }
 `;
 
-export const GET_USER_NFT_CLAIMED = gql`
-  query GetUserNftClaimed($user: String!) {
-    remarkedNftAddresses(filter: {signer: {equalTo: $user}}, orderBy: [EXTRINSIC_TIMESTAMP_ASC], first: 1) {
+export const GET_USERS_NFT_CLAIMED = gql`
+  query GetUserNftClaimed($first: Int!, $offset: Int!) {
+    remarkedNftAddresses(orderBy: [EXTRINSIC_TIMESTAMP_ASC], first: $first, offset: $offset) {
       totalCount
       nodes {
         signer
