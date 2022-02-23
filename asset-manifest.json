@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/crab-plo-rewards/static/css/main.b877666f.css",
-    "main.js": "/crab-plo-rewards/static/js/main.288aebc0.js",
+    "main.css": "/crab-plo-rewards/static/css/main.1f36ca17.css",
+    "main.js": "/crab-plo-rewards/static/js/main.50069867.js",
     "static/js/787.85ea96f7.chunk.js": "/crab-plo-rewards/static/js/787.85ea96f7.chunk.js",
+    "static/media/arrow-right.jpeg": "/crab-plo-rewards/static/media/arrow-right.66e36e9f69f5686a581e.jpeg",
     "index.html": "/crab-plo-rewards/index.html",
-    "main.b877666f.css.map": "/crab-plo-rewards/static/css/main.b877666f.css.map",
-    "main.288aebc0.js.map": "/crab-plo-rewards/static/js/main.288aebc0.js.map",
+    "main.1f36ca17.css.map": "/crab-plo-rewards/static/css/main.1f36ca17.css.map",
+    "main.50069867.js.map": "/crab-plo-rewards/static/js/main.50069867.js.map",
     "787.85ea96f7.chunk.js.map": "/crab-plo-rewards/static/js/787.85ea96f7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b877666f.css",
-    "static/js/main.288aebc0.js"
+    "static/css/main.1f36ca17.css",
+    "static/js/main.50069867.js"
   ]
 }
