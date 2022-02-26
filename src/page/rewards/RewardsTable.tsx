@@ -26,9 +26,15 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     )
   },
   {
-    title: 'Current CRAB Rewards',
-    dataIndex: 'currentCRabRewards',
-    key: 'currentCRabRewards',
+    title: 'As Contributor(KSM)',
+    dataIndex: 'ksmAsContributor',
+    key: 'ksmAsContributor',
+    align: 'right',
+  },
+  {
+    title: 'As Referral(KSM)',
+    dataIndex: 'ksmAsReferral',
+    key: 'ksmAsReferral',
     align: 'right',
   },
   {
@@ -38,15 +44,21 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     align: 'right',
   },
   {
-    title: 'Current CKTON Rewards',
-    dataIndex: 'currentCKtonRewards',
-    key: 'currentCKtonRewards',
-    align: 'right',
-  },
-  {
     title: 'Stage CKTON Rewards',
     dataIndex: 'stageCKtonRewards',
     key: 'stageCKtonRewards',
+    align: 'right',
+  },
+  {
+    title: 'Sent(CRAB)',
+    dataIndex: 'sentCRab',
+    key: 'sentCRab',
+    align: 'right',
+  },
+  {
+    title: 'Sent(CKTON)',
+    dataIndex: 'sentKton',
+    key: 'sentKton',
     align: 'right',
   },
 ];
