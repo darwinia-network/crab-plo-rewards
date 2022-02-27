@@ -7,7 +7,6 @@ import { downloadCsv } from '../../utils';
 import { GET_CONTRIBUTORS_POWER, GET_REFERRALS_POWER } from '../../config';
 import { TypeRewardsTableDataSource } from '../../type';
 import { useNavigate } from 'react-router-dom';
-import Big from 'big.js';
 
 const Page: React.FC = () => {
   const client = useApolloClient();
@@ -15,9 +14,11 @@ const Page: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [csvRows, setCsvRows] = useState<string[][]>([]);
   const [totalPower, setTotalPower] = useState('0');
-  const [totalBalance, setTotalBalance] = useState(Big(0).toFixed(8));
-  const [totalStageCRab, setTotalStageCRab] = useState(Big(0).toFixed(8));
-  const [totalStageCKton, setTotalStageCKton] = useState(Big(0).toFixed(8));
+  const [totalBalance, setTotalBalance] = useState(Number(0).toFixed(8));
+  const [totalStageCRab, setTotalStageCRab] = useState(Number(0).toFixed(8));
+  const [totalStageCKton, setTotalStageCKton] = useState(Number(0).toFixed(8));
+  const [totalCrabNextSend, setTotalCrabNextSend] = useState(Number(0).toFixed(8));
+  const [totalKtonNextSend, setTotalKtonNextSend] = useState(Number(0).toFixed(8));
   const [rewardsTableDataSource, setRewardsTableDataSource] = useState<TypeRewardsTableDataSource[]>([]);
 
   const handleClickCheckAll = async () => {
@@ -56,7 +57,8 @@ const Page: React.FC = () => {
         const {
           totalPower, totalBalance,
           csvRows, rewardsTableDataSource,
-          totalStageCRab, totalStageCKton
+          totalStageCRab, totalStageCKton,
+          totalCrabNextSend, totalKtonNextSend,
         } = ev.data;
 
         setTotalPower(totalPower);
@@ -64,6 +66,8 @@ const Page: React.FC = () => {
         setCsvRows(csvRows);
         setTotalStageCRab(totalStageCRab);
         setTotalStageCKton(totalStageCKton);
+        setTotalCrabNextSend(totalCrabNextSend);
+        setTotalKtonNextSend(totalKtonNextSend);
         setRewardsTableDataSource(rewardsTableDataSource);
         setLoading(false);
       }
@@ -88,26 +92,29 @@ const Page: React.FC = () => {
   return (
     <PageLayout>
       <PageContent>
-        <div className='flex items-end justify-end space-x-24 mb-2'>
+        <div className='flex items-center justify-center space-x-24 mb-2'>
           <div className='flex items-center space-x-6'>
             <Statistic loading={loading} title="Total Power" value={totalPower} />
             <Statistic loading={loading} title="Total Contribute" value={totalBalance} />
-            <Statistic loading={loading} title="Total Stage CRAB" value={totalStageCRab} />
-            <Statistic loading={loading} title="Total Stage CKTON" value={totalStageCKton} />
+            <Statistic loading={loading} title="Total Stage Crab" value={totalStageCRab} />
+            <Statistic loading={loading} title="Total Stage CKton" value={totalStageCKton} />
+            <Statistic loading={loading} title="Total Crab Next" value={totalCrabNextSend} />
+            <Statistic loading={loading} title="Total CKTON Next" value={totalKtonNextSend} />
           </div>
+        </div>
 
-          <div className='flex justify-end items-end space-x-2'>
+        <div className='flex items-end justify-between px-px pb-1'>
+          <Breadcrumb>
+            <Breadcrumb.Item className='antd-breadcrumb-item' onClick={() => navigate('/')}>Home</Breadcrumb.Item>
+            <Breadcrumb.Item>Rewards</Breadcrumb.Item>
+          </Breadcrumb>
+          <div className='flex justify-end items-end space-x-2 mb-2'>
             <Button className='rounded-md' onClick={handleClickCheckAll} loading={loading} type='primary'>
               Check All
             </Button>
             <Button className='rounded-md' onClick={handleClickDownload} disabled={csvRows.length === 0} loading={loading}>Download CSV</Button>
           </div>
         </div>
-
-        <Breadcrumb className='pl-px pb-1'>
-          <Breadcrumb.Item className='antd-breadcrumb-item' onClick={() => navigate('/')}>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>Rewards</Breadcrumb.Item>
-        </Breadcrumb>
 
         <RewardsTable
           loading={loading}
