@@ -91,6 +91,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       stageCKtonRewards: stageCKtonReward.toFixed(8),
       sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
       sentKton: sentKton ? sentKton[2] : '0.00000000',
+      differCrab: stageCRabReward.minus(sentCrab ? sentCrab[2] : 0).toFixed(8),
+      differKton: stageCKtonReward.minus(sentKton ? sentKton[2] : 0).toFixed(8),
     });
   });
 
@@ -120,6 +122,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
         stageCKtonRewards: stageCKtonReward.toFixed(8),
         sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
         sentKton: sentKton ? sentKton[2] : '0.00000000',
+        differCrab: stageCRabReward.minus(sentCrab ? sentCrab[2] : 0).toFixed(8),
+        differKton: stageCKtonReward.minus(sentKton ? sentKton[2] : 0).toFixed(8),
       });
     }
   });

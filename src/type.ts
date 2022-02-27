@@ -34,6 +34,8 @@ export type TypeRewardsTableDataSource = {
   stageCKtonRewards: string;
   sentCRab: string;
   sentKton: string;
+  differCrab: string;
+  differKton: string;
 };
 
 export type TypeNftTableDataSource = {

@@ -26,25 +26,25 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     )
   },
   {
-    title: 'As Contributor(KSM)',
+    title: 'As Contributor',
     dataIndex: 'ksmAsContributor',
     key: 'ksmAsContributor',
     align: 'right',
   },
   {
-    title: 'As Referral(KSM)',
+    title: 'As Referral',
     dataIndex: 'ksmAsReferral',
     key: 'ksmAsReferral',
     align: 'right',
   },
   {
-    title: 'Stage CRAB Rewards',
+    title: 'Stage CRAB',
     dataIndex: 'stageCRabRewards',
     key: 'stageCRabRewards',
     align: 'right',
   },
   {
-    title: 'Stage CKTON Rewards',
+    title: 'Stage CKTON',
     dataIndex: 'stageCKtonRewards',
     key: 'stageCKtonRewards',
     align: 'right',
@@ -59,6 +59,18 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     title: 'Sent(CKTON)',
     dataIndex: 'sentKton',
     key: 'sentKton',
+    align: 'right',
+  },
+  {
+    title: 'Differ(Crab)',
+    dataIndex: 'differCrab',
+    key: 'differCrab',
+    align: 'right',
+  },
+  {
+    title: 'Differ(CKTON)',
+    dataIndex: 'differKton',
+    key: 'differKton',
     align: 'right',
   },
 ];
