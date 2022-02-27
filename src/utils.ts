@@ -117,9 +117,11 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
   });
 
   return {
-    totalPower, totalBalance,
+    totalPower: totalPower.toString(),
+    totalBalance: totalBalance.div(KSM_PRECISIONS).toFixed(8),
+    totalStageCRab: totalStageCRab.toFixed(8),
+    totalStageCKton: totalStageCKton.toFixed(8),
     csvRows, rewardsTableDataSource,
-    totalStageCRab, totalStageCKton,
   };
 };
 
