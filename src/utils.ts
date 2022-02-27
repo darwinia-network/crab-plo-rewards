@@ -1,13 +1,33 @@
+import { decodeAddress, encodeAddress } from "@polkadot/keyring";
+import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { Keyring } from "@polkadot/keyring";
 import Big from 'big.js';
 import { ethers } from 'ethers';
-import { CRAB_REWARD, CKTON_REWARD, GLOBAL_TOTAL_CONTRIBUTE_POWER, KSM_PRECISIONS } from './config';
-import type { TypeGetUsersContributePowerNode, TypeGetUserNftClaimedNode, TypeRewardsTableDataSource, TypeNftTableDataSource } from './type';
+import { CRAB_REWARD, CKTON_REWARD, KSM_PRECISIONS, MIN_KSM_REWARDS } from './config';
+import type {
+  TypeGetUserNftClaimedNode,
+  TypeContributorsNode, TypeReferralsNode,
+  TypeRewardsTableDataSource, TypeNftTableDataSource
+} from './type';
 
 export const shortAddress = (address = "") => {
   if (address.length && address.length > 12) {
     return `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
   }
   return address;
+};
+
+export const polkadotAddressToPublicKey = (address: string) => u8aToHex(decodeAddress(address));
+export const publicKeyToPolkadotAddress = (publicKey: string) => {
+  try {
+    const address = encodeAddress(hexToU8a(publicKey));
+    const keyring = new Keyring();
+    keyring.setSS58Format(2); // Kusama format address
+    return keyring.addFromAddress(address).address;
+  } catch (error) {
+    console.error(error);
+    return publicKey;
+  }
 };
 
 export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'data:text/csv;charset=utf-8') => {
@@ -27,45 +47,113 @@ export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'da
   }, 0);
 };
 
-export const transformRewardsData = (nodes: TypeGetUsersContributePowerNode[]) => {
-  let totalCurrentCRab = Big(0);
-  let totalCurrentCKton = Big(0);
+export const transformRewardsData = (nodesContributor: TypeContributorsNode[], nodesReferral: TypeReferralsNode[], dataSent: string[][] = []) => {
+  let totalPower = Big(0);
+  let totalBalance = Big(0);
   let totalStageCRab = Big(0);
-  let totalStageCKTON = Big(0);
+  let totalStageCKton = Big(0);
+  let totalCrabNextSend = Big(0);
+  let totalKtonNextSend = Big(0);
   const csvRows: string[][] = [];
   const rewardsTableDataSource: TypeRewardsTableDataSource[] = [];
 
-  nodes?.forEach((value: TypeGetUsersContributePowerNode, index: number) => {
-    const referPower = value.contributors.nodes.reduce((previous, current) => Big(previous).add(current.powerRefer).toString(), '0');
-    const share = Big(value.totalPower).add(referPower).div(GLOBAL_TOTAL_CONTRIBUTE_POWER);
-    const currentCRabReward = share.times(CRAB_REWARD);
-    const currentCKtonReward = share.times(CKTON_REWARD);
-    const stageCRabReward = currentCRabReward.times(0.1);
-    const stageCKtonReward = currentCKtonReward.times(0.1);
+  nodesReferral.forEach(node => {
+    totalPower = totalPower.add(node.totalPower);
+  });
+  nodesContributor.forEach(node => {
+    totalPower = totalPower.add(node.totalPower);
+    totalBalance = totalBalance.add(node.totalBalance);
+  });
 
-    totalCurrentCRab = totalCurrentCRab.add(currentCRabReward);
-    totalCurrentCKton = totalCurrentCKton.add(currentCKtonReward);
+  nodesContributor.forEach((nodeContributor) => {
+    const nodeReferral = nodesReferral.find(v => v.user === polkadotAddressToPublicKey(nodeContributor.user));
+    const share = Big(nodeContributor.totalPower).add(nodeReferral ? nodeReferral.totalPower : 0).div(totalPower);
+
+    const stageCRabReward = share.times(CRAB_REWARD).times(0.1);
+    const stageCKtonReward = share.times(CKTON_REWARD).times(0.1);
+
     totalStageCRab = totalStageCRab.add(stageCRabReward);
-    totalStageCKTON = totalStageCKTON.add(stageCKtonReward);
+    totalStageCKton = totalStageCKton.add(stageCKtonReward);
 
-    csvRows.push([value.user, 'ring', stageCRabReward.toFixed(8), 'kusama']);
-    csvRows.push([value.user, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
+    // csvRows.push([nodeContributor.user, 'ring', stageCRabReward.toFixed(8), 'kusama']);
+    // csvRows.push([nodeContributor.user, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
+
+    const sentCrab = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'ring');
+    const sentKton = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'kton');
+
+    const differCrab = stageCRabReward.minus(sentCrab ? sentCrab[2] : 0);
+    const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
+    if (differCrab.gte(MIN_KSM_REWARDS)) {
+      totalCrabNextSend = totalCrabNextSend.add(differCrab);
+    }
+    if (differKton.gte(MIN_KSM_REWARDS)) {
+      totalKtonNextSend = totalKtonNextSend.add(differKton);
+    }
 
     rewardsTableDataSource.push({
-      key: index,
-      index: nodes?.length - index,
-      address: value.user,
-      currentCRabRewards: currentCRabReward.toFixed(8),
+      key: rewardsTableDataSource.length,
+      index: rewardsTableDataSource.length + 1,
+      address: nodeContributor.user,
+      ksmAsContributor: Big(nodeContributor.totalBalance).div(KSM_PRECISIONS).toFixed(8),
+      ksmAsReferral: Big(nodeReferral ? nodeReferral.totalBalance : 0).div(KSM_PRECISIONS).toFixed(8),
       stageCRabRewards: stageCRabReward.toFixed(8),
-      currentCKtonRewards: currentCKtonReward.toFixed(8),
       stageCKtonRewards: stageCKtonReward.toFixed(8),
+      sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
+      sentKton: sentKton ? sentKton[2] : '0.00000000',
+      differCrab: differCrab.toFixed(8),
+      differKton: differKton.toFixed(8),
     });
   });
 
+  nodesReferral.forEach((nodeReferral) => {
+    const address = publicKeyToPolkadotAddress(nodeReferral.user);
+    if (!rewardsTableDataSource.find(v => v.address === address)) {
+      const share = Big(nodeReferral.totalPower).div(totalPower);
+      const stageCRabReward = share.times(CRAB_REWARD).times(0.1);
+      const stageCKtonReward = share.times(CKTON_REWARD).times(0.1);
+
+      totalStageCRab = totalStageCRab.add(stageCRabReward);
+      totalStageCKton = totalStageCKton.add(stageCKtonReward);
+
+      // csvRows.push([address, 'ring', stageCRabReward.toFixed(8), 'kusama']);
+      // csvRows.push([address, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
+
+      const sentCrab = dataSent.find(v => v[0] === address && v[1] === 'ring');
+      const sentKton = dataSent.find(v => v[0] === address && v[1] === 'kton');
+
+      const differCrab = stageCRabReward.minus(sentCrab ? sentCrab[2] : 0);
+      const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
+      if (differCrab.gte(MIN_KSM_REWARDS)) {
+        totalCrabNextSend = totalCrabNextSend.add(differCrab);
+      }
+      if (differKton.gte(MIN_KSM_REWARDS)) {
+        totalKtonNextSend = totalKtonNextSend.add(differKton);
+      }
+
+      rewardsTableDataSource.push({
+        key: rewardsTableDataSource.length,
+        index: rewardsTableDataSource.length + 1,
+        address: address,
+        ksmAsContributor: Big(0).toFixed(8),
+        ksmAsReferral: Big(nodeReferral.totalBalance).div(KSM_PRECISIONS).toFixed(8),
+        stageCRabRewards: stageCRabReward.toFixed(8),
+        stageCKtonRewards: stageCKtonReward.toFixed(8),
+        sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
+        sentKton: sentKton ? sentKton[2] : '0.00000000',
+        differCrab: differCrab.toFixed(8),
+        differKton: differKton.toFixed(8),
+      });
+    }
+  });
+
   return {
+    totalPower: totalPower.toString(),
+    totalBalance: totalBalance.div(KSM_PRECISIONS).toFixed(8),
+    totalStageCRab: totalStageCRab.toFixed(8),
+    totalStageCKton: totalStageCKton.toFixed(8),
+    totalCrabNextSend: totalCrabNextSend.toFixed(8),
+    totalKtonNextSend: totalKtonNextSend.toFixed(8),
     csvRows, rewardsTableDataSource,
-    totalCurrentCRab, totalCurrentCKton,
-    totalStageCRab, totalStageCKTON,
   };
 };
 

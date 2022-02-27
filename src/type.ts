@@ -1,11 +1,13 @@
-export type TypeGetUsersContributePowerNode = {
+export type TypeReferralsNode = {
   user: string;
   totalPower: string;
-  contributors: {
-    nodes: {
-      powerRefer: string;
-    }[];
-  };
+  totalBalance: string;
+};
+
+export type TypeContributorsNode = {
+  user: string;
+  totalPower: string;
+  totalBalance: string;
 };
 
 export type TypeGetUserNftClaimedNode = {
@@ -26,10 +28,14 @@ export type TypeRewardsTableDataSource = {
   key: number;
   index: number;
   address: string;
-  currentCKtonRewards: string;
-  stageCKtonRewards: string;
-  currentCRabRewards: string;
+  ksmAsContributor: string;
+  ksmAsReferral: string;
   stageCRabRewards: string;
+  stageCKtonRewards: string;
+  sentCRab: string;
+  sentKton: string;
+  differCrab: string;
+  differKton: string;
 };
 
 export type TypeNftTableDataSource = {

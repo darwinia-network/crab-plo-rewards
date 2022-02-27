@@ -6,7 +6,7 @@ type TypeProps = {
 };
 
 const Content: React.FC<TypeProps> = (props) => (
-  <div className={`pt-10 page-content-height ${props.className}`}>
+  <div className={`pt-6 page-content-height ${props.className}`}>
     {props.children}
   </div>
 );
