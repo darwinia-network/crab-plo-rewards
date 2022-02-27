@@ -78,6 +78,9 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     // csvRows.push([nodeContributor.user, 'ring', stageCRabReward.toFixed(8), 'kusama']);
     // csvRows.push([nodeContributor.user, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
 
+    const sentCrab = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'ring');
+    const sentKton = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'kton');
+
     rewardsTableDataSource.push({
       key: rewardsTableDataSource.length,
       index: rewardsTableDataSource.length + 1,
@@ -86,8 +89,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       ksmAsReferral: Big(nodeReferral ? nodeReferral.totalBalance : 0).div(KSM_PRECISIONS).toFixed(8),
       stageCRabRewards: stageCRabReward.toFixed(8),
       stageCKtonRewards: stageCKtonReward.toFixed(8),
-      sentCRab: 'Todo',
-      sentKton: 'Todo',
+      sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
+      sentKton: sentKton ? sentKton[2] : '0.00000000',
     });
   });
 
@@ -104,6 +107,9 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       // csvRows.push([address, 'ring', stageCRabReward.toFixed(8), 'kusama']);
       // csvRows.push([address, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
 
+      const sentCrab = dataSent.find(v => v[0] === address && v[1] === 'ring');
+      const sentKton = dataSent.find(v => v[0] === address && v[1] === 'kton');
+
       rewardsTableDataSource.push({
         key: rewardsTableDataSource.length,
         index: rewardsTableDataSource.length + 1,
@@ -112,8 +118,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
         ksmAsReferral: Big(nodeReferral.totalBalance).div(KSM_PRECISIONS).toFixed(8),
         stageCRabRewards: stageCRabReward.toFixed(8),
         stageCKtonRewards: stageCKtonReward.toFixed(8),
-        sentCRab: 'Todo',
-        sentKton: 'Todo',
+        sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
+        sentKton: sentKton ? sentKton[2] : '0.00000000',
       });
     }
   });
