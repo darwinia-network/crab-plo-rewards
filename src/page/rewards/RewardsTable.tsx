@@ -1,5 +1,6 @@
 import React from 'react';
-import { Table, Typography } from 'antd';
+import { Table, Typography, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { shortAddress } from '../../utils';
 import type { TypeRewardsTableDataSource } from '../../type';
@@ -26,43 +27,43 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     )
   },
   {
-    title: 'As Contributor',
+    title: <div className='inline-flex items-center'>As Contributor<Tooltip title="作为Contributor贡献的KSM"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'ksmAsContributor',
     key: 'ksmAsContributor',
     align: 'right',
   },
   {
-    title: 'As Referral',
+    title: <div className='inline-flex items-center'>As Referral<Tooltip title="作为推荐者贡献的KSM"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'ksmAsReferral',
     key: 'ksmAsReferral',
     align: 'right',
   },
   {
-    title: 'Stage CRAB',
+    title: <div className='inline-flex items-center'>Stage CRAB<Tooltip title="乘完10%之后应发的CRAB"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'stageCRabRewards',
     key: 'stageCRabRewards',
     align: 'right',
   },
   {
-    title: 'Stage CKTON',
+    title: <div className='inline-flex items-center'>Stage CKTON<Tooltip title="乘完10%之后应发的CKTON"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'stageCKtonRewards',
     key: 'stageCKtonRewards',
     align: 'right',
   },
   {
-    title: 'Sent(CRAB)',
+    title: <div className='inline-flex items-center'>Sent(CRAB)<Tooltip title="已经发出去的CRAB"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'sentCRab',
     key: 'sentCRab',
     align: 'right',
   },
   {
-    title: 'Sent(CKTON)',
+    title: <div className='inline-flex items-center'>Sent(CKTON)<Tooltip title="已经发出去的CKTON"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'sentKton',
     key: 'sentKton',
     align: 'right',
   },
   {
-    title: 'Differ(Crab)',
+    title: <div className='inline-flex items-center'>Differ(CRAB)<Tooltip title="等于「Stage CRAB」减去「Sent(CRAB)」。红色表示发多了，绿色表示未发的数量"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'differCrab',
     key: 'differCrab',
     align: 'right',
@@ -71,7 +72,7 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     ),
   },
   {
-    title: 'Differ(CKTON)',
+    title: <div className='inline-flex items-center'>Differ(CKTON)<Tooltip title="等于「Stage CKTON」减去「Sent(CKTON)」。红色表示发多了，绿色表示未发的数量"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>,
     dataIndex: 'differKton',
     key: 'differKton',
     align: 'right',

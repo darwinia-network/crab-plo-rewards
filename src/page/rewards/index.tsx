@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Statistic, Breadcrumb, notification } from 'antd';
+import { Button, Statistic, Breadcrumb, notification, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useApolloClient } from "@apollo/client";
 import { RewardsTable } from './RewardsTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
@@ -94,12 +95,24 @@ const Page: React.FC = () => {
       <PageContent>
         <div className='flex items-center justify-center space-x-24 mb-2'>
           <div className='flex items-center space-x-6'>
-            <Statistic loading={loading} title="Total Power" value={totalPower} />
-            <Statistic loading={loading} title="Total Contribute" value={totalBalance} />
-            <Statistic loading={loading} title="Total Stage Crab" value={totalStageCRab} />
-            <Statistic loading={loading} title="Total Stage CKton" value={totalStageCKton} />
-            <Statistic loading={loading} title="Total Crab Next" value={totalCrabNextSend} />
-            <Statistic loading={loading} title="Total CKTON Next" value={totalKtonNextSend} />
+            <Statistic loading={loading} value={totalPower}
+              title={<div className='inline-flex items-center'>Total Power<Tooltip title="Contributors和Referrals的Power总和"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>}
+            />
+            <Statistic loading={loading} value={totalBalance}
+              title={<div className='inline-flex items-center'>Total Contribute<Tooltip title="Contributors贡献的总KSM"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>}
+            />
+            <Statistic loading={loading} value={totalStageCRab}
+              title={<div className='inline-flex items-center'>Total Stage CRAB<Tooltip title="Stage CRAB总计"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>}
+            />
+            <Statistic loading={loading} value={totalStageCKton}
+              title={<div className='inline-flex items-center'>Total Stage CKTON<Tooltip title="Stage CKTON总计"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>}
+            />
+            <Statistic loading={loading} value={totalCrabNextSend}
+              title={<div className='inline-flex items-center'>Total CRAB Next<Tooltip title="还需要共补发这么多CRAB"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>}
+            />
+            <Statistic loading={loading} value={totalKtonNextSend}
+              title={<div className='inline-flex items-center'>Total CKTON Next<Tooltip title="还需要共补发这么多CKTON"><QuestionCircleOutlined className="ml-1" /></Tooltip></div>}
+            />
           </div>
         </div>
 

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.5.9",
     "@polkadot/keyring": "^8.4.1",
     "@polkadot/util": "^8.4.1",

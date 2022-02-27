@@ -15,9 +15,27 @@
   background: #1890ff;
 }
 
+.ant-pagination-item {
+  border-radius: 4px !important;
+}
+
+.ant-pagination-item-link {
+  border-radius: 4px !important;
+}
+
+.ant-select-selector {
+  border-radius: 4px !important;
+}
+
+.ant-pagination-options-quick-jumper input {
+  border-radius: 4px !important;
+}
+
+.ant-tooltip-inner {
+  border-radius: 4px !important;}
+
 .antd-breadcrumb-item {
   transition: all 0.3s;
-
 }
 
 .antd-breadcrumb-item:hover {
