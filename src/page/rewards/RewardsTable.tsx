@@ -66,12 +66,18 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     dataIndex: 'differCrab',
     key: 'differCrab',
     align: 'right',
+    render: (text: string) => (
+      <Typography.Text type={(text === '0.00000000' || text === '-0.00000000') ? 'secondary' : text.startsWith('-') ? 'danger' : 'success'}>{text}</Typography.Text>
+    ),
   },
   {
     title: 'Differ(CKTON)',
     dataIndex: 'differKton',
     key: 'differKton',
     align: 'right',
+    render: (text: string) => (
+      <Typography.Text type={(text === '0.00000000' || text === '-0.00000000') ? 'secondary' : text.startsWith('-') ? 'danger' : 'success'}>{text}</Typography.Text>
+    ),
   },
 ];
 

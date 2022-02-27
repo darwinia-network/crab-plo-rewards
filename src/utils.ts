@@ -3,7 +3,7 @@ import { hexToU8a, u8aToHex } from "@polkadot/util";
 import { Keyring } from "@polkadot/keyring";
 import Big from 'big.js';
 import { ethers } from 'ethers';
-import { CRAB_REWARD, CKTON_REWARD, KSM_PRECISIONS } from './config';
+import { CRAB_REWARD, CKTON_REWARD, KSM_PRECISIONS, MIN_KSM_REWARDS } from './config';
 import type {
   TypeGetUserNftClaimedNode,
   TypeContributorsNode, TypeReferralsNode,
@@ -81,6 +81,9 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     const sentCrab = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'ring');
     const sentKton = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'kton');
 
+    const differCrab = stageCRabReward.minus(sentCrab ? sentCrab[2] : 0);
+    const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
+
     rewardsTableDataSource.push({
       key: rewardsTableDataSource.length,
       index: rewardsTableDataSource.length + 1,
@@ -91,8 +94,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       stageCKtonRewards: stageCKtonReward.toFixed(8),
       sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
       sentKton: sentKton ? sentKton[2] : '0.00000000',
-      differCrab: stageCRabReward.minus(sentCrab ? sentCrab[2] : 0).toFixed(8),
-      differKton: stageCKtonReward.minus(sentKton ? sentKton[2] : 0).toFixed(8),
+      differCrab: differCrab.toFixed(8),
+      differKton: differKton.toFixed(8),
     });
   });
 
@@ -112,6 +115,9 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       const sentCrab = dataSent.find(v => v[0] === address && v[1] === 'ring');
       const sentKton = dataSent.find(v => v[0] === address && v[1] === 'kton');
 
+      const differCrab = stageCRabReward.minus(sentCrab ? sentCrab[2] : 0);
+      const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
+
       rewardsTableDataSource.push({
         key: rewardsTableDataSource.length,
         index: rewardsTableDataSource.length + 1,
@@ -122,8 +128,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
         stageCKtonRewards: stageCKtonReward.toFixed(8),
         sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
         sentKton: sentKton ? sentKton[2] : '0.00000000',
-        differCrab: stageCRabReward.minus(sentCrab ? sentCrab[2] : 0).toFixed(8),
-        differKton: stageCKtonReward.minus(sentKton ? sentKton[2] : 0).toFixed(8),
+        differCrab: differCrab.toFixed(8),
+        differKton: differKton.toFixed(8),
       });
     }
   });

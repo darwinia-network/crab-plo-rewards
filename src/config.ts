@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 
 export const CRAB_REWARD = 200000000;
 export const CKTON_REWARD = 8000;
-
+export const MIN_KSM_REWARDS = new Big('0.00000001');
 export const KSM_PRECISIONS = new Big("1000000000000");
 
 export const GET_CONTRIBUTORS_POWER = gql`
