@@ -47,7 +47,7 @@ export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'da
   }, 0);
 };
 
-export const transformRewardsData = (nodesContributor: TypeContributorsNode[], nodesReferral: TypeReferralsNode[]) => {
+export const transformRewardsData = (nodesContributor: TypeContributorsNode[], nodesReferral: TypeReferralsNode[], dataSent: string[][] = []) => {
   let totalPower = Big(0);
   let totalBalance = Big(0);
   let totalStageCRab = Big(0);
@@ -62,6 +62,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     totalPower = totalPower.add(node.totalPower);
     totalBalance = totalBalance.add(node.totalBalance);
   });
+
+  void(dataSent);  // TODO
 
   nodesContributor.forEach((nodeContributor) => {
     const nodeReferral = nodesReferral.find(v => v.user === polkadotAddressToPublicKey(nodeContributor.user));
