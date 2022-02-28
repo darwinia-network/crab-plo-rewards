@@ -75,9 +75,6 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     totalStageCRab = totalStageCRab.add(stageCRabReward);
     totalStageCKton = totalStageCKton.add(stageCKtonReward);
 
-    // csvRows.push([nodeContributor.user, 'ring', stageCRabReward.toFixed(8), 'kusama']);
-    // csvRows.push([nodeContributor.user, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
-
     const sentCrab = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'ring');
     const sentKton = dataSent.find(v => v[0] === nodeContributor.user && v[1] === 'kton');
 
@@ -85,9 +82,11 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
     if (differCrab.gte(MIN_KSM_REWARDS)) {
       totalCrabNextSend = totalCrabNextSend.add(differCrab);
+      csvRows.push([nodeContributor.user, 'ring', differCrab.toFixed(8), 'kusama']);
     }
     if (differKton.gte(MIN_KSM_REWARDS)) {
       totalKtonNextSend = totalKtonNextSend.add(differKton);
+      csvRows.push([nodeContributor.user, 'kton', differKton.toFixed(8), 'kusama']);
     }
 
     rewardsTableDataSource.push({
@@ -115,9 +114,6 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       totalStageCRab = totalStageCRab.add(stageCRabReward);
       totalStageCKton = totalStageCKton.add(stageCKtonReward);
 
-      // csvRows.push([address, 'ring', stageCRabReward.toFixed(8), 'kusama']);
-      // csvRows.push([address, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
-
       const sentCrab = dataSent.find(v => v[0] === address && v[1] === 'ring');
       const sentKton = dataSent.find(v => v[0] === address && v[1] === 'kton');
 
@@ -125,9 +121,11 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
       const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
       if (differCrab.gte(MIN_KSM_REWARDS)) {
         totalCrabNextSend = totalCrabNextSend.add(differCrab);
+        csvRows.push([address, 'ring', differCrab.toFixed(8), 'kusama']);
       }
       if (differKton.gte(MIN_KSM_REWARDS)) {
         totalKtonNextSend = totalKtonNextSend.add(differKton);
+        csvRows.push([address, 'kton', differKton.toFixed(8), 'kusama']);
       }
 
       rewardsTableDataSource.push({
