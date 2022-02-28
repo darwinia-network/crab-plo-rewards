@@ -3,7 +3,7 @@ import { hexToU8a, u8aToHex } from "@polkadot/util";
 import { Keyring } from "@polkadot/keyring";
 import Big from 'big.js';
 import { ethers } from 'ethers';
-import { CRAB_REWARD, CKTON_REWARD, KSM_PRECISIONS, MIN_KSM_REWARDS } from './config';
+import { CRAB_REWARD, CKTON_REWARD, KSM_PRECISIONS, MIN_KSM_REWARDS, STAGE_REWARDS_RATE } from './config';
 import type {
   TypeGetUserNftClaimedNode,
   TypeContributorsNode, TypeReferralsNode,
@@ -69,8 +69,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     const nodeReferral = nodesReferral.find(v => v.user === polkadotAddressToPublicKey(nodeContributor.user));
     const share = Big(nodeContributor.totalPower).add(nodeReferral ? nodeReferral.totalPower : 0).div(totalPower);
 
-    const stageCRabReward = share.times(CRAB_REWARD).times(0.1);
-    const stageCKtonReward = share.times(CKTON_REWARD).times(0.1);
+    const stageCRabReward = share.times(CRAB_REWARD).times(STAGE_REWARDS_RATE);
+    const stageCKtonReward = share.times(CKTON_REWARD).times(STAGE_REWARDS_RATE);
 
     totalStageCRab = totalStageCRab.add(stageCRabReward);
     totalStageCKton = totalStageCKton.add(stageCKtonReward);
@@ -109,8 +109,8 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
     const address = publicKeyToPolkadotAddress(nodeReferral.user);
     if (!rewardsTableDataSource.find(v => v.address === address)) {
       const share = Big(nodeReferral.totalPower).div(totalPower);
-      const stageCRabReward = share.times(CRAB_REWARD).times(0.1);
-      const stageCKtonReward = share.times(CKTON_REWARD).times(0.1);
+      const stageCRabReward = share.times(CRAB_REWARD).times(STAGE_REWARDS_RATE);
+      const stageCKtonReward = share.times(CKTON_REWARD).times(STAGE_REWARDS_RATE);
 
       totalStageCRab = totalStageCRab.add(stageCRabReward);
       totalStageCKton = totalStageCKton.add(stageCKtonReward);
