@@ -156,20 +156,24 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
 };
 
 export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[]) => {
-  const csvRows: string[] = [];
+  const csvRowsTotal: string[][] = [];
+  const csvRowsClaimed: string[][] = [];
+  const csvRowsUnclaim: string[][] = [];
   let nftTableDataSource: TypeNftTableDataSource[] = [];
 
   for (let value of data) {
     const claim = nodes?.find(v => v.signer === value[0]);
+    const contribute = Big(value[1]).div(KSM_PRECISIONS).toFixed(8);
     nftTableDataSource.push({
       key: 0,
       index: 0,
       address: value[0],
-      ksmContribute: Big(value[1]).div(KSM_PRECISIONS).toFixed(8),
+      ksmContribute: contribute,
       claimAddress: claim ? { address: claim.addressValue, extrinsicHash: claim.extrinsicHash } : null,
       isClaimed: claim ? true :false,
     });
-    claim && ethers.utils.isAddress(claim.addressValue) && csvRows.push(claim.addressValue);
+    csvRowsTotal.push([value[0], contribute]);
+    claim && ethers.utils.isAddress(claim.addressValue) ? csvRowsClaimed.push([value[0], contribute]) : csvRowsUnclaim.push([value[0], contribute]);
   }
 
   nftTableDataSource = nftTableDataSource.map((value, index) => ({
@@ -179,7 +183,8 @@ export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimed
   }));
 
   return {
-    csvRows, nftTableDataSource,
+    nftTableDataSource,
+    csvRowsTotal, csvRowsClaimed, csvRowsUnclaim
   };
 };
 

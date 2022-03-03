@@ -13,7 +13,9 @@ const Page: React.FC = () => {
   const navigate = useNavigate();
   const client = useApolloClient();
 
-  const [csvRows, setCsvRows] = useState<string[]>([]);
+  const [csvRowsTotal, setCsvRowsTotal] = useState<string[][]>([]);
+  const [csvRowsClaimed, setCsvRowsClaimed] = useState<string[][]>([]);
+  const [csvRowsUnclaim, setCsvRowsUnclaim] = useState<string[][]>([]);
   const [loading, setLoading] = useState(false);
   const [disabledCheck, setDisabledCheck] = useState(false);
   const [nftTableDataSource, setNftTableDataSource] = useState<TypeNftTableDataSource[]>([]);
@@ -54,15 +56,25 @@ const Page: React.FC = () => {
     }
 
     const transformed = transformNftsData(nftEligibleData, claimeds.nodes);
-    setCsvRows(transformed.csvRows);
+    setCsvRowsTotal(transformed.csvRowsTotal);
+    setCsvRowsClaimed(transformed.csvRowsClaimed);
+    setCsvRowsUnclaim(transformed.csvRowsUnclaim);
     setNftTableDataSource(transformed.nftTableDataSource);
 
     setDisabledCheck(true);
     setLoading(false);
   };
 
-  const handleClickDownload = () => {
-    downloadCsv(csvRows.join("\n"), 'nftclaimeds.csv');
+  const handleClickExportClaimed = () => {
+    downloadCsv(csvRowsClaimed.map(v => v.join(',')).join("\n"), 'nft-claimed.csv');
+  }
+
+  const handleClickExportUnclaim = () => {
+    downloadCsv(csvRowsUnclaim.map(v => v.join(',')).join("\n"), 'nft-unclaim.csv');
+  }
+
+  const handleClickExportTotal = () => {
+    downloadCsv(csvRowsTotal.map(v => v.join(',')).join("\n"), 'nft-total.csv');
   };
 
   return (
@@ -71,14 +83,16 @@ const Page: React.FC = () => {
         <div className='flex items-end justify-end space-x-24 mb-2'>
           <div className='flex items-center space-x-6'>
             <Statistic loading={loading} title="Total NFT Eligible" value={nftEligibleData.length} />
-            <Statistic loading={loading} title="Total Claimed" value={csvRows.length} />
-            <Statistic loading={loading} title="Total Unclaimed" value={nftEligibleData.length - csvRows.length} />
+            <Statistic loading={loading} title="Total Claimed" value={csvRowsClaimed.length} />
+            <Statistic loading={loading} title="Total Unclaimed" value={csvRowsUnclaim.length} />
           </div>
           <div className='flex justify-end items-end space-x-2'>
             <Button className='rounded-md' onClick={handleClickCheckClaim} disabled={disabledCheck} loading={loading} type='primary'>
               Check Claim
             </Button>
-            <Button className='rounded-md' onClick={handleClickDownload} disabled={csvRows.length === 0} loading={loading}>Download CSV</Button>
+            <Button className='rounded-md' onClick={handleClickExportClaimed} loading={loading} disabled={csvRowsClaimed.length === 0}>Export Claimed</Button>
+            <Button className='rounded-md' onClick={handleClickExportUnclaim} loading={loading} disabled={csvRowsUnclaim.length === 0}>Export Unclaim</Button>
+            <Button className='rounded-md' onClick={handleClickExportTotal}   loading={loading} disabled={csvRowsTotal.length === 0}>Export Total</Button>
           </div>
         </div>
         <Breadcrumb className='pl-px pb-1'>
