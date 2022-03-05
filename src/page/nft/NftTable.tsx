@@ -69,7 +69,13 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
 ];
 
 const Component: React.FC<TypePros> = (props) => (
-  <Table columns={columns} dataSource={props.dataSource} loading={props.loading} pagination={false} scroll={{ y: 'calc(100vh - 20rem)', x: 'max-content' }} />
+  <Table
+    columns={columns}
+    dataSource={props.dataSource}
+    loading={props.loading}
+    pagination={{ defaultPageSize: 50, showQuickJumper: true, showLessItems: true, total: props.dataSource.length, showTotal: total => `Total Items: ${total}` }}
+    scroll={{ y: 'calc(100vh - 20rem)', x: 'max-content' }}
+  />
 );
 
 export const NftTable = React.memo<TypePros>(Component);
