@@ -3,7 +3,7 @@ import { useApolloClient } from "@apollo/client";
 import { GET_USERS_NFT_CLAIMED } from '../../config';
 import  { NftTable } from './NftTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
-import { downloadCsv, transformNftsData } from '../../utils';
+import { downloadCsv } from '../../utils';
 import { Button, Statistic, Breadcrumb, notification } from 'antd';
 import { data as nftEligibleData } from './data';
 import type { TypeNftTableDataSource, TypeGetUsersNftClaimed } from '../../type';
@@ -55,14 +55,24 @@ const Page: React.FC = () => {
       claimeds.nodes = claimeds.nodes.concat(c.nodes);
     }
 
-    const transformed = transformNftsData(nftEligibleData, claimeds.nodes);
-    setCsvRowsTotal(transformed.csvRowsTotal);
-    setCsvRowsClaimed(transformed.csvRowsClaimed);
-    setCsvRowsUnclaim(transformed.csvRowsUnclaim);
-    setNftTableDataSource(transformed.nftTableDataSource);
+    const worker = new Worker(new URL('./worker.ts', import.meta.url));
+    worker.onerror = (err) => {
+      setLoading(false);
+      worker.terminate();
+      console.error('worker error:', err.message);
+    }
+    worker.onmessage = (ev) => {
+      worker.terminate();
+      const transformed = ev.data;
+      setCsvRowsTotal(transformed.csvRowsTotal);
+      setCsvRowsClaimed(transformed.csvRowsClaimed);
+      setCsvRowsUnclaim(transformed.csvRowsUnclaim);
+      setNftTableDataSource(transformed.nftTableDataSource);
 
-    setDisabledCheck(true);
-    setLoading(false);
+      setDisabledCheck(true);
+      setLoading(false);
+    }
+    worker.postMessage(claimeds.nodes);
   };
 
   const handleClickExportClaimed = () => {
