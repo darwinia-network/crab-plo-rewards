@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { PageLayout, PageContent, PageFooter } from '../../component';
 
 type TypeCustomLink = {
   to: string;
@@ -17,12 +18,15 @@ const CustomLink: React.FC<TypeCustomLink> = (props) => (
 
 const Page: React.FC = () => {
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <nav className="flex flex-col space-y-7 pb-32">
-        <CustomLink to="/crab/rewards" text="Darwinia Rewards" />
-        <CustomLink to="/crab/nft" text="Crab NFT" />
-      </nav>
-    </div>
+    <PageLayout>
+      <PageContent className="flex items-center justify-center">
+        <nav className="flex flex-col space-y-7 pb-32">
+          <CustomLink to="/crab/rewards" text="Darwinia Rewards" />
+          <CustomLink to="/crab/nft" text="Crab NFT" />
+        </nav>
+      </PageContent>
+      <PageFooter />
+    </PageLayout>
   );
 };
 
