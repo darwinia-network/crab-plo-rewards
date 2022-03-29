@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient } from '@apollo/client';
 import { GET_USERS_NFT_CLAIMED } from '../../config';
-import  { NftTable } from './NftTable';
+import { NftTable } from './NftTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { downloadCsv } from '../../utils';
 import { Button, Statistic, Breadcrumb, notification } from 'antd';
@@ -49,7 +49,9 @@ const Page: React.FC = () => {
     const claimeds = await getUsersNftClaimed(0);
     while (claimeds.pageInfo.hasNextPage) {
       const c = await getUsersNftClaimed(claimeds.nodes.length);
-      if (c.totalCount === 0 || c.nodes.length === 0) { break; }
+      if (c.totalCount === 0 || c.nodes.length === 0) {
+        break;
+      }
       claimeds.totalCount = c.totalCount;
       claimeds.pageInfo = c.pageInfo;
       claimeds.nodes = claimeds.nodes.concat(c.nodes);
@@ -60,7 +62,7 @@ const Page: React.FC = () => {
       setLoading(false);
       worker.terminate();
       console.error('worker error:', err.message);
-    }
+    };
     worker.onmessage = (ev) => {
       worker.terminate();
       const transformed = ev.data;
@@ -71,42 +73,71 @@ const Page: React.FC = () => {
 
       setDisabledCheck(true);
       setLoading(false);
-    }
+    };
     worker.postMessage(claimeds.nodes);
   };
 
   const handleClickExportClaimed = () => {
-    downloadCsv(csvRowsClaimed.map(v => v.join(',')).join("\n"), 'nft-claimed.csv');
-  }
+    downloadCsv(csvRowsClaimed.map((v) => v.join(',')).join('\n'), 'nft-claimed.csv');
+  };
 
   const handleClickExportUnclaim = () => {
-    downloadCsv(csvRowsUnclaim.map(v => v.join(',')).join("\n"), 'nft-unclaim.csv');
-  }
+    downloadCsv(csvRowsUnclaim.map((v) => v.join(',')).join('\n'), 'nft-unclaim.csv');
+  };
 
   const handleClickExportTotal = () => {
-    downloadCsv(csvRowsTotal.map(v => v.join(',')).join("\n"), 'nft-total.csv');
+    downloadCsv(csvRowsTotal.map((v) => v.join(',')).join('\n'), 'nft-total.csv');
   };
 
   return (
     <PageLayout>
       <PageContent>
-        <div className='flex items-end justify-end space-x-24 mb-2'>
-          <div className='flex items-center space-x-6'>
+        <div className="flex items-end justify-end space-x-24 mb-2">
+          <div className="flex items-center space-x-6">
             <Statistic loading={loading} title="Total NFT Eligible" value={nftEligibleData.length} />
             <Statistic loading={loading} title="Total Claimed" value={csvRowsClaimed.length} />
             <Statistic loading={loading} title="Total Unclaimed" value={csvRowsUnclaim.length} />
           </div>
-          <div className='flex justify-end items-end space-x-2'>
-            <Button className='rounded-md' onClick={handleClickCheckClaim} disabled={disabledCheck} loading={loading} type='primary'>
+          <div className="flex justify-end items-end space-x-2">
+            <Button
+              className="rounded-md"
+              onClick={handleClickCheckClaim}
+              disabled={disabledCheck}
+              loading={loading}
+              type="primary"
+            >
               Check Claim
             </Button>
-            <Button className='rounded-md' onClick={handleClickExportClaimed} loading={loading} disabled={csvRowsClaimed.length === 0}>Export Claimed</Button>
-            <Button className='rounded-md' onClick={handleClickExportUnclaim} loading={loading} disabled={csvRowsUnclaim.length === 0}>Export Unclaim</Button>
-            <Button className='rounded-md' onClick={handleClickExportTotal}   loading={loading} disabled={csvRowsTotal.length === 0}>Export Total</Button>
+            <Button
+              className="rounded-md"
+              onClick={handleClickExportClaimed}
+              loading={loading}
+              disabled={csvRowsClaimed.length === 0}
+            >
+              Export Claimed
+            </Button>
+            <Button
+              className="rounded-md"
+              onClick={handleClickExportUnclaim}
+              loading={loading}
+              disabled={csvRowsUnclaim.length === 0}
+            >
+              Export Unclaim
+            </Button>
+            <Button
+              className="rounded-md"
+              onClick={handleClickExportTotal}
+              loading={loading}
+              disabled={csvRowsTotal.length === 0}
+            >
+              Export Total
+            </Button>
           </div>
         </div>
-        <Breadcrumb className='pl-px pb-1'>
-          <Breadcrumb.Item className='antd-breadcrumb-item' onClick={() => navigate('/')}>Home</Breadcrumb.Item>
+        <Breadcrumb className="pl-px pb-1">
+          <Breadcrumb.Item className="antd-breadcrumb-item" onClick={() => navigate('/')}>
+            Home
+          </Breadcrumb.Item>
           <Breadcrumb.Item>NFT</Breadcrumb.Item>
         </Breadcrumb>
         <NftTable loading={loading} dataSource={nftTableDataSource} />

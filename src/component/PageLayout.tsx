@@ -6,9 +6,7 @@ type TypeProps = {
 };
 
 const Layout: React.FC<TypeProps> = (props) => (
-  <div className={`container mx-auto h-screen relative pb-14 ${props.className}`}>
-    {props.children}
-  </div>
+  <div className={`container mx-auto h-screen relative pb-14 ${props.className}`}>{props.children}</div>
 );
 
 export const PageLayout = React.memo<TypeProps>(Layout);

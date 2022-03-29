@@ -43,6 +43,6 @@ export type TypeNftTableDataSource = {
   index: number;
   address: string;
   ksmContribute: string;
-  claimAddress: { address: string, extrinsicHash: string } | null;
+  claimAddress: { address: string; extrinsicHash: string } | null;
   isClaimed: boolean;
 };

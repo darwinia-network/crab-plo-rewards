@@ -1,15 +1,15 @@
 import React from 'react';
-import { Routes, Route } from "react-router-dom";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { Routes, Route } from 'react-router-dom';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { SuspenseLoading } from './component/SuspensLoading';
 
 const rewardsGqlClient = new ApolloClient({
-  uri: "https://api.subquery.network/sq/darwinia-network/home-plo-kusama",
+  uri: 'https://api.subquery.network/sq/darwinia-network/home-plo-kusama',
   cache: new InMemoryCache(),
 });
 
 const nftClaimGqlClient = new ApolloClient({
-  uri: "https://api.subquery.network/sq/darwinia-network/crab-plo-nft",
+  uri: 'https://api.subquery.network/sq/darwinia-network/crab-plo-nft',
   cache: new InMemoryCache(),
 });
 
@@ -33,9 +33,9 @@ export const Router: React.FC = () => (
   <React.Suspense fallback={<SuspenseLoading />}>
     <Routes>
       <Route index element={<AsyncHomePage />} />
-      <Route path='nft' element={<AsyncNftPageWithGql />} />
-      <Route path='rewards' element={<AsyncRewardsPageWithGql />} />
-      <Route path='*' element={<p className='py-1 px-2'>There's nothing here !</p>} />
+      <Route path="nft" element={<AsyncNftPageWithGql />} />
+      <Route path="rewards" element={<AsyncRewardsPageWithGql />} />
+      <Route path="*" element={<p className="py-1 px-2">There's nothing here !</p>} />
     </Routes>
   </React.Suspense>
 );
