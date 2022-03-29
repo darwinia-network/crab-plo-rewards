@@ -14,18 +14,18 @@ const nftClaimGqlClient = new ApolloClient({
 });
 
 const AsyncHomePage = React.lazy(() => import('./page/home'));
-const AsyncNftPage = React.lazy(() => import('./page/nft'));
-const AsyncRewardsPower = React.lazy(() => import('./page/rewards'));
+const AsyncCrabNftPage = React.lazy(() => import('./page/crab-nft'));
+const AsyncCrabRewardsPower = React.lazy(() => import('./page/crab-rewards'));
 
-const AsyncNftPageWithGql: React.FC = () => (
+const AsyncCrabNftPageWithGql: React.FC = () => (
   <ApolloProvider client={nftClaimGqlClient}>
-    <AsyncNftPage />
+    <AsyncCrabNftPage />
   </ApolloProvider>
 );
 
-const AsyncRewardsPageWithGql: React.FC = () => (
+const AsyncCrabRewardsPageWithGql: React.FC = () => (
   <ApolloProvider client={rewardsGqlClient}>
-    <AsyncRewardsPower />
+    <AsyncCrabRewardsPower />
   </ApolloProvider>
 );
 
@@ -33,8 +33,8 @@ export const Router: React.FC = () => (
   <React.Suspense fallback={<SuspenseLoading />}>
     <Routes>
       <Route index element={<AsyncHomePage />} />
-      <Route path="nft" element={<AsyncNftPageWithGql />} />
-      <Route path="rewards" element={<AsyncRewardsPageWithGql />} />
+      <Route path="crab/nft" element={<AsyncCrabNftPageWithGql />} />
+      <Route path="crab/rewards" element={<AsyncCrabRewardsPageWithGql />} />
       <Route path="*" element={<p className="py-1 px-2">There's nothing here !</p>} />
     </Routes>
   </React.Suspense>
