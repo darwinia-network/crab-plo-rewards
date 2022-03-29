@@ -1,14 +1,14 @@
-# Export CSV | Crab Plo Rewards
+# Export CSV | Plo Rewards Export
 
-- Fetch reward data
+- Fetch rewards data
 - Export to csv file
 
 
 ## Local Serve
 
 ```bash
-$ git clone git@github.com:darwinia-network/crab-plo-rewards.git
-# or git clone https://github.com/darwinia-network/crab-plo-rewards.git
-$ cd crab-plo-rewards
+$ git clone git@github.com:darwinia-network/plo-rewards-export.git
+# or git clone https://github.com/darwinia-network/plo-rewards-export.git
+$ cd plo-rewards-export
 $ yarn && yarn start
 ```
