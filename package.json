@@ -1,5 +1,5 @@
 {
-  "name": "crab-plo-rewards",
+  "name": "plo-rewards-export",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -35,7 +35,7 @@
     "format": "prettier './src/**/*.{ts,tsx}'  --write",
     "prepare": "husky install"
   },
-  "homepage": "https://darwinia-network.github.io/crab-plo-rewards",
+  "homepage": "https://darwinia-network.github.io/plo-rewards-export",
   "eslintConfig": {
     "extends": [
       "react-app",
