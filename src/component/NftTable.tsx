@@ -1,8 +1,9 @@
 import React from 'react';
 import { Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { shortAddress } from '../../utils';
-import type { TypeNftTableDataSource } from '../../type';
+import { shortAddress } from '../utils';
+import { NftClaimNetworks } from '../type';
+import type { TypeNftTableDataSource } from '../type';
 import { ethers } from 'ethers';
 
 type TypePros = {
@@ -29,7 +30,7 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
     dataIndex: 'claimAddress',
     key: 'claimAddress',
     align: 'center',
-    render: (text: { address: string; extrinsicHash: string } | null) =>
+    render: (text: { address: string; extrinsicHash: string; network: NftClaimNetworks } | null) =>
       text ? (
         <div className="inline-flex space-x-1">
           <Typography.Text
@@ -39,7 +40,14 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
             {shortAddress(text.address)}
           </Typography.Text>
           <span>·</span>
-          <Typography.Link target={'_blank'} href={`https://kusama.subscan.io/extrinsic/${text.extrinsicHash}`}>
+          <Typography.Link
+            target={'_blank'}
+            href={`${
+              text.network === NftClaimNetworks.CRAB
+                ? 'https://kusama.subscan.io/extrinsic/'
+                : 'https://polkadot.subscan.io/extrinsic/'
+            }${text.extrinsicHash}`}
+          >
             extrinsic
           </Typography.Link>
         </div>
@@ -68,9 +76,9 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
     onFilter: (value, record) => record.isClaimed === value,
   },
   {
-    title: 'KSM Conntribute',
-    dataIndex: 'ksmContribute',
-    key: 'ksmContribute',
+    title: 'Total Conntribute',
+    dataIndex: 'totalContribute',
+    key: 'totalContribute',
     align: 'center',
   },
 ];

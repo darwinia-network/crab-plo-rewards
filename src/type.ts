@@ -38,11 +38,16 @@ export type TypeRewardsTableDataSource = {
   differKton: string;
 };
 
+export enum NftClaimNetworks {
+  CRAB,
+  DARWINIA,
+}
+
 export type TypeNftTableDataSource = {
   key: number;
   index: number;
   address: string;
-  ksmContribute: string;
-  claimAddress: { address: string; extrinsicHash: string } | null;
+  totalContribute: string;
+  claimAddress: { address: string; extrinsicHash: string; network: NftClaimNetworks } | null;
   isClaimed: boolean;
 };

@@ -78,15 +78,15 @@ const Page: React.FC = () => {
   };
 
   const handleClickExportClaimed = () => {
-    downloadCsv(csvRowsClaimed.map((v) => v.join(',')).join('\n'), 'crab-nft-claimed.csv');
+    downloadCsv(csvRowsClaimed.map((v) => v.join(',')).join('\n'), 'darwinia-nft-claimed.csv');
   };
 
   const handleClickExportUnclaim = () => {
-    downloadCsv(csvRowsUnclaim.map((v) => v.join(',')).join('\n'), 'crab-nft-unclaim.csv');
+    downloadCsv(csvRowsUnclaim.map((v) => v.join(',')).join('\n'), 'darwinia-nft-unclaim.csv');
   };
 
   const handleClickExportTotal = () => {
-    downloadCsv(csvRowsTotal.map((v) => v.join(',')).join('\n'), 'crab-nft-total.csv');
+    downloadCsv(csvRowsTotal.map((v) => v.join(',')).join('\n'), 'darwinia-nft-total.csv');
   };
 
   return (

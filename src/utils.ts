@@ -3,7 +3,14 @@ import { hexToU8a, u8aToHex } from '@polkadot/util';
 import { Keyring } from '@polkadot/keyring';
 import Big from 'big.js';
 import { ethers } from 'ethers';
-import { CRAB_REWARD, CKTON_REWARD, KSM_PRECISIONS, MIN_KSM_REWARDS, STAGE_REWARDS_RATE } from './config';
+import {
+  CRAB_REWARD,
+  CKTON_REWARD,
+  DOT_PRECISIONS,
+  KSM_PRECISIONS,
+  MIN_KSM_REWARDS,
+  STAGE_REWARDS_RATE,
+} from './config';
 import type {
   TypeGetUserNftClaimedNode,
   TypeContributorsNode,
@@ -11,6 +18,7 @@ import type {
   TypeRewardsTableDataSource,
   TypeNftTableDataSource,
 } from './type';
+import { NftClaimNetworks } from './type';
 
 export const shortAddress = (address = '') => {
   if (address.length && address.length > 12) {
@@ -166,26 +174,28 @@ export const transformRewardsData = (
   };
 };
 
-export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[]) => {
-  const csvRowsTotal: string[][] = [];
-  const csvRowsClaimed: string[][] = [];
-  const csvRowsUnclaim: string[][] = [];
+export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[], network: NftClaimNetworks) => {
+  const csvRowsTotal: string[][] = [['Contribute的地址', 'Contribute数量']];
+  const csvRowsClaimed: string[][] = [['Contribute的地址', '接收NFT的地址', 'Contribute数量']];
+  const csvRowsUnclaim: string[][] = [['Contribute的地址', 'Contribute数量']];
   let nftTableDataSource: TypeNftTableDataSource[] = [];
+
+  const precision = network === NftClaimNetworks.CRAB ? KSM_PRECISIONS : DOT_PRECISIONS;
 
   for (let value of data) {
     const claim = nodes?.find((v) => v.signer === value[0]);
-    const contribute = Big(value[1]).div(KSM_PRECISIONS).toFixed(8);
+    const contribute = Big(value[1]).div(precision).toFixed(8);
     nftTableDataSource.push({
       key: 0,
       index: 0,
       address: value[0],
-      ksmContribute: contribute,
-      claimAddress: claim ? { address: claim.addressValue, extrinsicHash: claim.extrinsicHash } : null,
+      totalContribute: contribute,
+      claimAddress: claim ? { address: claim.addressValue, extrinsicHash: claim.extrinsicHash, network } : null,
       isClaimed: claim ? true : false,
     });
     csvRowsTotal.push([value[0], contribute]);
     claim && ethers.utils.isAddress(claim.addressValue)
-      ? csvRowsClaimed.push([value[0], contribute])
+      ? csvRowsClaimed.push([value[0], claim.addressValue, contribute])
       : csvRowsUnclaim.push([value[0], contribute]);
   }
 

@@ -21,8 +21,9 @@ const Page: React.FC = () => {
     <PageLayout>
       <PageContent className="flex items-center justify-center">
         <nav className="flex flex-col space-y-7 pb-32">
-          <CustomLink to="/crab/rewards" text="Darwinia Rewards" />
           <CustomLink to="/crab/nft" text="Crab NFT" />
+          <CustomLink to="/darwinia/nft" text="Darwinia NFT" />
+          <CustomLink to="/crab/rewards" text="Darwinia Rewards" />
         </nav>
       </PageContent>
       <PageFooter />
