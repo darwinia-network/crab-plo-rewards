@@ -114,7 +114,7 @@ const Page: React.FC = () => {
           <div className="flex items-center space-x-6">
             <Statistic loading={loading} title="Total NFT Eligible" value={nftEligibleData.length} />
             <Statistic loading={loading} title="Total Claimed" value={csvRowsClaimed.length} />
-            <Statistic loading={loading} title="Total Unclaimed" value={csvRowsUnclaim.length} />
+            <Statistic loading={loading} title="Total Unclaim" value={csvRowsUnclaim.length} />
           </div>
           <div className="flex justify-end items-end space-x-2">
             <Button
