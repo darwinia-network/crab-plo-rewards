@@ -175,9 +175,9 @@ export const transformRewardsData = (
 };
 
 export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[], network: NftClaimNetworks) => {
-  const csvRowsTotal: string[][] = [['Contribute的地址', 'Contribute数量']];
-  const csvRowsClaimed: string[][] = [['Contribute的地址', '接收NFT的地址', 'Contribute数量']];
-  const csvRowsUnclaim: string[][] = [['Contribute的地址', 'Contribute数量']];
+  const csvRowsTotal: string[][] = [];
+  const csvRowsClaimed: string[][] = [];
+  const csvRowsUnclaim: string[][] = [];
   let nftTableDataSource: TypeNftTableDataSource[] = [];
 
   const precision = network === NftClaimNetworks.CRAB ? KSM_PRECISIONS : DOT_PRECISIONS;

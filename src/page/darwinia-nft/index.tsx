@@ -78,15 +78,33 @@ const Page: React.FC = () => {
   };
 
   const handleClickExportClaimed = () => {
-    downloadCsv(csvRowsClaimed.map((v) => v.join(',')).join('\n'), 'darwinia-nft-claimed.csv');
+    downloadCsv(
+      [['Contribute的地址', '接收NFT的地址', 'Contribute的数量']]
+        .concat(csvRowsClaimed)
+        .map((v) => v.join(','))
+        .join('\n'),
+      'darwinia-nft-claimed.csv'
+    );
   };
 
   const handleClickExportUnclaim = () => {
-    downloadCsv(csvRowsUnclaim.map((v) => v.join(',')).join('\n'), 'darwinia-nft-unclaim.csv');
+    downloadCsv(
+      [['Contribute的地址', 'Contribute数量']]
+        .concat(csvRowsUnclaim)
+        .map((v) => v.join(','))
+        .join('\n'),
+      'darwinia-nft-unclaim.csv'
+    );
   };
 
   const handleClickExportTotal = () => {
-    downloadCsv(csvRowsTotal.map((v) => v.join(',')).join('\n'), 'darwinia-nft-total.csv');
+    downloadCsv(
+      [['Contribute的地址', 'Contribute数量']]
+        .concat(csvRowsTotal)
+        .map((v) => v.join(','))
+        .join('\n'),
+      'darwinia-nft-total.csv'
+    );
   };
 
   return (
