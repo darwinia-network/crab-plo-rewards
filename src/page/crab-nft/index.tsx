@@ -99,7 +99,7 @@ const Page: React.FC = () => {
 
   const handleClickExportTotal = () => {
     downloadCsv(
-      [['Contribute的地址', 'Contribute数量']]
+      [['Contribute的地址', '接收NFT的地址', 'Contribute数量']]
         .concat(csvRowsTotal)
         .map((v) => v.join(','))
         .join('\n'),

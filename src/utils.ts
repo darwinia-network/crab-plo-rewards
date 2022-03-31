@@ -193,7 +193,7 @@ export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimed
       claimAddress: claim ? { address: claim.addressValue, extrinsicHash: claim.extrinsicHash, network } : null,
       isClaimed: claim ? true : false,
     });
-    csvRowsTotal.push([value[0], contribute]);
+    csvRowsTotal.push([value[0], claim ? claim.addressValue : 'unclaim', contribute]);
     claim && ethers.utils.isAddress(claim.addressValue)
       ? csvRowsClaimed.push([value[0], claim.addressValue, contribute])
       : csvRowsUnclaim.push([value[0], contribute]);
