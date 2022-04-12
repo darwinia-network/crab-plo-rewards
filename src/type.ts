@@ -30,12 +30,10 @@ export type TypeRewardsTableDataSource = {
   address: string;
   ksmAsContributor: string;
   ksmAsReferral: string;
+  crabRewards: string;
+  cktonRewards: string;
   stageCRabRewards: string;
   stageCKtonRewards: string;
-  sentCRab: string;
-  sentKton: string;
-  differCrab: string;
-  differKton: string;
 };
 
 export enum NftClaimNetworks {

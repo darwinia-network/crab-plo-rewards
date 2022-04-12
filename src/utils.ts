@@ -3,14 +3,7 @@ import { hexToU8a, u8aToHex } from '@polkadot/util';
 import { Keyring } from '@polkadot/keyring';
 import Big from 'big.js';
 import { ethers } from 'ethers';
-import {
-  CRAB_REWARD,
-  CKTON_REWARD,
-  DOT_PRECISIONS,
-  KSM_PRECISIONS,
-  MIN_KSM_REWARDS,
-  STAGE_REWARDS_RATE,
-} from './config';
+import { CRAB_REWARD, CKTON_REWARD, DOT_PRECISIONS, KSM_PRECISIONS, STAGE_REWARDS_RATE } from './config';
 import type {
   TypeGetUserNftClaimedNode,
   TypeContributorsNode,
@@ -57,17 +50,11 @@ export const downloadCsv = (data: string, filename = 'transferx.csv', type = 'da
   }, 0);
 };
 
-export const transformRewardsData = (
-  nodesContributor: TypeContributorsNode[],
-  nodesReferral: TypeReferralsNode[],
-  dataSent: string[][] = []
-) => {
+export const transformRewardsData = (nodesContributor: TypeContributorsNode[], nodesReferral: TypeReferralsNode[]) => {
   let totalPower = Big(0);
   let totalBalance = Big(0);
   let totalStageCRab = Big(0);
   let totalStageCKton = Big(0);
-  let totalCrabNextSend = Big(0);
-  let totalKtonNextSend = Big(0);
   const csvRows: string[][] = [];
   const rewardsTableDataSource: TypeRewardsTableDataSource[] = [];
 
@@ -85,25 +72,17 @@ export const transformRewardsData = (
       .add(nodeReferral ? nodeReferral.totalPower : 0)
       .div(totalPower);
 
-    const stageCRabReward = share.times(CRAB_REWARD).times(STAGE_REWARDS_RATE);
-    const stageCKtonReward = share.times(CKTON_REWARD).times(STAGE_REWARDS_RATE);
+    const crabRewards = share.times(CRAB_REWARD);
+    const cktonRewards = share.times(CKTON_REWARD);
+
+    const stageCRabReward = crabRewards.times(STAGE_REWARDS_RATE);
+    const stageCKtonReward = cktonRewards.times(STAGE_REWARDS_RATE);
 
     totalStageCRab = totalStageCRab.add(stageCRabReward);
     totalStageCKton = totalStageCKton.add(stageCKtonReward);
 
-    const sentCrab = dataSent.find((v) => v[0] === nodeContributor.user && v[1] === 'ring');
-    const sentKton = dataSent.find((v) => v[0] === nodeContributor.user && v[1] === 'kton');
-
-    const differCrab = stageCRabReward.minus(sentCrab ? sentCrab[2] : 0);
-    const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
-    if (differCrab.gte(MIN_KSM_REWARDS)) {
-      totalCrabNextSend = totalCrabNextSend.add(differCrab);
-      csvRows.push([nodeContributor.user, 'ring', differCrab.toFixed(8), 'kusama']);
-    }
-    if (differKton.gte(MIN_KSM_REWARDS)) {
-      totalKtonNextSend = totalKtonNextSend.add(differKton);
-      csvRows.push([nodeContributor.user, 'kton', differKton.toFixed(8), 'kusama']);
-    }
+    csvRows.push([nodeContributor.user, 'ring', stageCRabReward.toFixed(8), 'kusama']);
+    csvRows.push([nodeContributor.user, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
 
     rewardsTableDataSource.push({
       key: rewardsTableDataSource.length,
@@ -113,12 +92,10 @@ export const transformRewardsData = (
       ksmAsReferral: Big(nodeReferral ? nodeReferral.totalBalance : 0)
         .div(KSM_PRECISIONS)
         .toFixed(8),
+      crabRewards: crabRewards.toFixed(8),
+      cktonRewards: cktonRewards.toFixed(8),
       stageCRabRewards: stageCRabReward.toFixed(8),
       stageCKtonRewards: stageCKtonReward.toFixed(8),
-      sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
-      sentKton: sentKton ? sentKton[2] : '0.00000000',
-      differCrab: differCrab.toFixed(8),
-      differKton: differKton.toFixed(8),
     });
   });
 
@@ -126,25 +103,18 @@ export const transformRewardsData = (
     const address = publicKeyToPolkadotAddress(nodeReferral.user);
     if (!rewardsTableDataSource.find((v) => v.address === address)) {
       const share = Big(nodeReferral.totalPower).div(totalPower);
-      const stageCRabReward = share.times(CRAB_REWARD).times(STAGE_REWARDS_RATE);
-      const stageCKtonReward = share.times(CKTON_REWARD).times(STAGE_REWARDS_RATE);
+
+      const crabRewards = share.times(CRAB_REWARD);
+      const cktonRewards = share.times(CKTON_REWARD);
+
+      const stageCRabReward = crabRewards.times(STAGE_REWARDS_RATE);
+      const stageCKtonReward = cktonRewards.times(STAGE_REWARDS_RATE);
 
       totalStageCRab = totalStageCRab.add(stageCRabReward);
       totalStageCKton = totalStageCKton.add(stageCKtonReward);
 
-      const sentCrab = dataSent.find((v) => v[0] === address && v[1] === 'ring');
-      const sentKton = dataSent.find((v) => v[0] === address && v[1] === 'kton');
-
-      const differCrab = stageCRabReward.minus(sentCrab ? sentCrab[2] : 0);
-      const differKton = stageCKtonReward.minus(sentKton ? sentKton[2] : 0);
-      if (differCrab.gte(MIN_KSM_REWARDS)) {
-        totalCrabNextSend = totalCrabNextSend.add(differCrab);
-        csvRows.push([address, 'ring', differCrab.toFixed(8), 'kusama']);
-      }
-      if (differKton.gte(MIN_KSM_REWARDS)) {
-        totalKtonNextSend = totalKtonNextSend.add(differKton);
-        csvRows.push([address, 'kton', differKton.toFixed(8), 'kusama']);
-      }
+      csvRows.push([address, 'ring', stageCRabReward.toFixed(8), 'kusama']);
+      csvRows.push([address, 'kton', stageCKtonReward.toFixed(8), 'kusama']);
 
       rewardsTableDataSource.push({
         key: rewardsTableDataSource.length,
@@ -152,12 +122,10 @@ export const transformRewardsData = (
         address: address,
         ksmAsContributor: Big(0).toFixed(8),
         ksmAsReferral: Big(nodeReferral.totalBalance).div(KSM_PRECISIONS).toFixed(8),
+        crabRewards: crabRewards.toFixed(8),
+        cktonRewards: cktonRewards.toFixed(8),
         stageCRabRewards: stageCRabReward.toFixed(8),
         stageCKtonRewards: stageCKtonReward.toFixed(8),
-        sentCRab: sentCrab ? sentCrab[2] : '0.00000000',
-        sentKton: sentKton ? sentKton[2] : '0.00000000',
-        differCrab: differCrab.toFixed(8),
-        differKton: differKton.toFixed(8),
       });
     }
   });
@@ -165,10 +133,8 @@ export const transformRewardsData = (
   return {
     totalPower: totalPower.toString(),
     totalBalance: totalBalance.div(KSM_PRECISIONS).toFixed(8),
-    totalStageCRab: totalStageCRab.toFixed(8),
-    totalStageCKton: totalStageCKton.toFixed(8),
-    totalCrabNextSend: totalCrabNextSend.toFixed(8),
-    totalKtonNextSend: totalKtonNextSend.toFixed(8),
+    totalStageCRab: totalStageCRab.toFixed(0),
+    totalStageCKton: totalStageCKton.toFixed(0),
     csvRows,
     rewardsTableDataSource,
   };

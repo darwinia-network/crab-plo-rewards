@@ -5,7 +5,7 @@ import { useApolloClient } from '@apollo/client';
 import { RewardsTable } from './RewardsTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { downloadCsv } from '../../utils';
-import { GET_CONTRIBUTORS_POWER, GET_REFERRALS_POWER } from '../../config';
+import { GET_CONTRIBUTORS_POWER, GET_REFERRALS_POWER, CRAB_REWARD, CKTON_REWARD } from '../../config';
 import { TypeRewardsTableDataSource } from '../../type';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,8 +18,6 @@ const Page: React.FC = () => {
   const [totalBalance, setTotalBalance] = useState(Number(0).toFixed(8));
   const [totalStageCRab, setTotalStageCRab] = useState(Number(0).toFixed(8));
   const [totalStageCKton, setTotalStageCKton] = useState(Number(0).toFixed(8));
-  const [totalCrabNextSend, setTotalCrabNextSend] = useState(Number(0).toFixed(8));
-  const [totalKtonNextSend, setTotalKtonNextSend] = useState(Number(0).toFixed(8));
   const [rewardsTableDataSource, setRewardsTableDataSource] = useState<TypeRewardsTableDataSource[]>([]);
 
   const handleClickCheckAll = async () => {
@@ -61,24 +59,13 @@ const Page: React.FC = () => {
       };
       worker.onmessage = (ev) => {
         worker.terminate();
-        const {
-          totalPower,
-          totalBalance,
-          csvRows,
-          rewardsTableDataSource,
-          totalStageCRab,
-          totalStageCKton,
-          totalCrabNextSend,
-          totalKtonNextSend,
-        } = ev.data;
+        const { totalPower, totalBalance, csvRows, rewardsTableDataSource, totalStageCRab, totalStageCKton } = ev.data;
 
         setTotalPower(totalPower);
         setTotalBalance(totalBalance);
         setCsvRows(csvRows);
         setTotalStageCRab(totalStageCRab);
         setTotalStageCKton(totalStageCKton);
-        setTotalCrabNextSend(totalCrabNextSend);
-        setTotalKtonNextSend(totalKtonNextSend);
         setRewardsTableDataSource(rewardsTableDataSource);
         setLoading(false);
       };
@@ -131,6 +118,30 @@ const Page: React.FC = () => {
             />
             <Statistic
               loading={loading}
+              value={CRAB_REWARD}
+              title={
+                <div className="inline-flex items-center">
+                  Total CRAB Rewards
+                  <Tooltip title="Stage CRAB总计">
+                    <QuestionCircleOutlined className="ml-1" />
+                  </Tooltip>
+                </div>
+              }
+            />
+            <Statistic
+              loading={loading}
+              value={CKTON_REWARD}
+              title={
+                <div className="inline-flex items-center">
+                  Total CKTON Rewards
+                  <Tooltip title="Stage CRAB总计">
+                    <QuestionCircleOutlined className="ml-1" />
+                  </Tooltip>
+                </div>
+              }
+            />
+            <Statistic
+              loading={loading}
               value={totalStageCRab}
               title={
                 <div className="inline-flex items-center">
@@ -148,30 +159,6 @@ const Page: React.FC = () => {
                 <div className="inline-flex items-center">
                   Total Stage CKTON
                   <Tooltip title="Stage CKTON总计">
-                    <QuestionCircleOutlined className="ml-1" />
-                  </Tooltip>
-                </div>
-              }
-            />
-            <Statistic
-              loading={loading}
-              value={totalCrabNextSend}
-              title={
-                <div className="inline-flex items-center">
-                  Total CRAB Next
-                  <Tooltip title="还需要共补发这么多CRAB">
-                    <QuestionCircleOutlined className="ml-1" />
-                  </Tooltip>
-                </div>
-              }
-            />
-            <Statistic
-              loading={loading}
-              value={totalKtonNextSend}
-              title={
-                <div className="inline-flex items-center">
-                  Total CKTON Next
-                  <Tooltip title="还需要共补发这么多CKTON">
                     <QuestionCircleOutlined className="ml-1" />
                   </Tooltip>
                 </div>
