@@ -25,6 +25,12 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
+/*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
+
+/*! noble-secp256k1 - MIT License (c) 2019 Paul Miller (paulmillr.com) */
+
+/*! scure-base - MIT License (c) 2022 Paul Miller (paulmillr.com) */
+
 /**
  * React Router DOM v6.2.1
  *
