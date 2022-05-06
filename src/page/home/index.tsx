@@ -24,6 +24,7 @@ const Page: React.FC = () => {
           <CustomLink to="/crab/nft" text="Crab NFT" />
           <CustomLink to="/darwinia/nft" text="Darwinia NFT" />
           <CustomLink to="/crab/rewards" text="Crab Rewards" />
+          <CustomLink to="/crab/airdrop" text="Crab Airdrop" />
         </nav>
       </PageContent>
       <PageFooter />

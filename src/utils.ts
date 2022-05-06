@@ -1,5 +1,7 @@
 import { decodeAddress, encodeAddress } from '@polkadot/keyring';
-import { hexToU8a, u8aToHex } from '@polkadot/util';
+import { hexToU8a, u8aToHex, stringToU8a, numberToU8a, isNull } from '@polkadot/util';
+import { TypeRegistry } from '@polkadot/types';
+import type { Codec, DetectCodec } from '@polkadot/types/types';
 import { Keyring } from '@polkadot/keyring';
 import Big from 'big.js';
 import { ethers } from 'ethers';
@@ -13,12 +15,53 @@ import type {
 } from './type';
 import { NftClaimNetworks } from './type';
 
-export const shortAddress = (address = '') => {
+export const toShortAddress = (address = '') => {
   if (address.length && address.length > 12) {
     return `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
   }
   return address;
 };
+
+export const registry = new TypeRegistry();
+
+export function dvmAddressToAccountId(address: string | null | undefined): DetectCodec<Codec, string> {
+  if (!address) {
+    return registry.createType('AccountId', '');
+  }
+
+  // eslint-disable-next-line no-magic-numbers
+  const data = new Uint8Array(32);
+
+  data.set(stringToU8a('dvm:'));
+  // eslint-disable-next-line no-magic-numbers
+  data.set(hexToU8a(address), 11);
+  // eslint-disable-next-line no-bitwise
+  const checksum = data.reduce((pre: number, current: number): number => pre ^ current);
+
+  // eslint-disable-next-line no-magic-numbers
+  data.set(numberToU8a(checksum), 31);
+  const accountId = registry.createType('AccountId', data);
+
+  return accountId;
+}
+
+export function convertToSS58(text: string, prefix: number | null, isShort = false): string {
+  if (!text || isNull(prefix)) {
+    return '';
+  }
+
+  try {
+    let address = encodeAddress(text, prefix);
+
+    if (isShort) {
+      address = toShortAddress(address);
+    }
+
+    return address;
+  } catch (error) {
+    return '';
+  }
+}
 
 export const polkadotAddressToPublicKey = (address: string) => u8aToHex(decodeAddress(address));
 export const publicKeyToPolkadotAddress = (publicKey: string) => {

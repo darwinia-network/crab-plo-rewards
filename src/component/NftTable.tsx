@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { shortAddress } from '../utils';
+import { toShortAddress } from '../utils';
 import { NftClaimNetworks } from '../type';
 import type { TypeNftTableDataSource } from '../type';
 import { ethers } from 'ethers';
@@ -23,7 +23,7 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
     dataIndex: 'address',
     key: 'address',
     align: 'center',
-    render: (text: string) => <Typography.Text copyable={{ text: text }}>{shortAddress(text)}</Typography.Text>,
+    render: (text: string) => <Typography.Text copyable={{ text: text }}>{toShortAddress(text)}</Typography.Text>,
   },
   {
     title: 'Claim Address',
@@ -37,7 +37,7 @@ const columns: ColumnsType<TypeNftTableDataSource> = [
             copyable={{ text: text.address }}
             type={ethers.utils.isAddress(text.address) ? 'success' : 'danger'}
           >
-            {shortAddress(text.address)}
+            {toShortAddress(text.address)}
           </Typography.Text>
           <span>·</span>
           <Typography.Link

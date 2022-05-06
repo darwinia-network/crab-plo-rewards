@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Typography, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-import { shortAddress } from '../../utils';
+import { toShortAddress } from '../../utils';
 import type { TypeRewardsTableDataSource } from '../../type';
 
 type TypePros = {
@@ -22,7 +22,7 @@ const columns: ColumnsType<TypeRewardsTableDataSource> = [
     dataIndex: 'address',
     key: 'address',
     align: 'center',
-    render: (text: string) => <Typography.Text copyable={{ text: text }}>{shortAddress(text)}</Typography.Text>,
+    render: (text: string) => <Typography.Text copyable={{ text: text }}>{toShortAddress(text)}</Typography.Text>,
   },
   {
     title: (
