@@ -59,6 +59,16 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [ethClaimed, setEthClaimed] = useState<ClaimState>([]);
   const [tronClaimed, setTronClaimed] = useState<ClaimState>([]);
+  const [genesisTotalAirdrop, setGenesisTotalAirdrop] = useState(Big(0));
+
+  useEffect(() => {
+    const total = Object.values(genesisData.dot)
+      .reduce((acc: Big, cur) => acc.add(cur), Big(0))
+      .add(Object.values(genesisData.eth).reduce((acc, cur) => acc.add(cur), Big(0)))
+      .add(Object.values(genesisData.tron).reduce((acc, cur) => acc.add(cur), Big(0)));
+
+    setGenesisTotalAirdrop(total);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -141,6 +151,11 @@ const Page = () => {
             <Statistic loading={loading} title="Total ETH Addresses" value={unclaimEth.length} />
             <Statistic loading={loading} title="Total TRON Addresses" value={unclaimTron.length} />
             <Statistic loading={loading} title="Total Addresses" value={dataSource.length} />
+            <Statistic
+              loading={loading}
+              title="Total Airdrop (CRAB)"
+              value={genesisTotalAirdrop.div(CRAB_PRECISIONS).toFixed(4)}
+            />
           </div>
           <div className="flex justify-end items-end space-x-2">
             <Button
