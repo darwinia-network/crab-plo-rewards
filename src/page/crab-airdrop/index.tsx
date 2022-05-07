@@ -10,7 +10,7 @@ import Big from 'big.js';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { useNavigate } from 'react-router-dom';
 
-type ClaimState = string[];
+type ClaimState = [string, string][];
 type UnclaimTableState = {
   key: string;
   snapshotAddress: string;
@@ -59,11 +59,14 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [ethClaimed, setEthClaimed] = useState<ClaimState>([]);
   const [tronClaimed, setTronClaimed] = useState<ClaimState>([]);
+
+  const [totalClaimedAirdrop, setTotalClaimedAirdrop] = useState(Big(0));
+  const [totalUnclaimAirdrop, setTotalUnclaimAirdrop] = useState(Big(0));
   const [genesisTotalAirdrop, setGenesisTotalAirdrop] = useState(Big(0));
 
   useEffect(() => {
     const total = Object.values(genesisData.dot)
-      .reduce((acc: Big, cur) => acc.add(cur), Big(0))
+      .reduce((acc, cur) => acc.add(cur), Big(0))
       .add(Object.values(genesisData.eth).reduce((acc, cur) => acc.add(cur), Big(0)))
       .add(Object.values(genesisData.tron).reduce((acc, cur) => acc.add(cur), Big(0)));
 
@@ -76,8 +79,8 @@ const Page = () => {
     combineLatest(
       [api.query.claims.claimsFromEth.entries(...[]), api.query.claims.claimsFromTron.entries(...[])],
       (eth, tron) => [
-        eth.map((item) => item[0].toHuman()?.toString()),
-        tron.map((item) => item[0].toHuman()?.toString()),
+        eth.map((item) => [item[0].toHuman()?.toString(), item[1].toString()]),
+        tron.map((item) => [item[0].toHuman()?.toString(), item[1].toString()]),
       ]
     ).subscribe(([eth, tron]) => {
       setEthClaimed(eth as ClaimState);
@@ -87,49 +90,118 @@ const Page = () => {
     });
   }, [api]);
 
-  const { dataSource, unclaimEth, unclaimTron } = useMemo(() => {
+  const { dataSource, unclaimDot, unclaimEth, unclaimTron } = useMemo(() => {
     let unclaimEth: string[] = [];
+    let unclaimDot: string[] = [];
     let unclaimTron: string[] = [];
     const dataSource: UnclaimTableState[] = [];
 
     if (ethClaimed.length && tronClaimed.length) {
       setLoading(true);
 
-      unclaimEth = Object.keys(genesisData.dot)
-        .concat(Object.keys(genesisData.eth))
-        .filter((address: string) => !ethClaimed.some((claimed) => claimed === address));
-      unclaimTron = Object.keys(genesisData.tron).filter(
-        (address: string) => !tronClaimed.some((claimed) => claimed === `0x${address.slice(2)}`)
-      );
-
       type dotKey = keyof typeof genesisData.dot;
       type ethKey = keyof typeof genesisData.eth;
       type tronKey = keyof typeof genesisData.tron;
 
-      unclaimEth.forEach((item) => {
+      unclaimDot = Object.keys(genesisData.dot).filter(
+        (address: string) =>
+          !ethClaimed.some(
+            ([addr, amount]) =>
+              addr.toLowerCase() === address.toLowerCase() && amount === genesisData.dot[address as dotKey].toString()
+          )
+      );
+      unclaimEth = Object.keys(genesisData.eth).filter(
+        (address: string) =>
+          !ethClaimed.some(
+            ([addr, amount]) =>
+              addr.toLowerCase() === address.toLowerCase() && amount === genesisData.eth[address as ethKey].toString()
+          )
+      );
+      unclaimTron = Object.keys(genesisData.tron).filter(
+        (address: string) =>
+          !tronClaimed.some(
+            ([addr, amount]) =>
+              addr.toLowerCase() === `0x${address.slice(2)}`.toLowerCase() &&
+              amount === genesisData.tron[address as tronKey].toString()
+          )
+      );
+
+      unclaimDot.forEach((item) => {
         dataSource.push({
-          key: item,
+          key: `dot-${item}`,
           snapshotAddress: item,
           substrateAddress: convertToSS58(dvmAddressToAccountId(item).toString(), SUBSTRATE_PREFIX),
-          crabAmount: genesisData.dot[item as dotKey]
-            ? genesisData.dot[item as dotKey]
-            : genesisData.eth[item as ethKey],
+          crabAmount: genesisData.dot[item as dotKey],
+        });
+      });
+
+      unclaimEth.forEach((item) => {
+        dataSource.push({
+          key: `eth-${item}`,
+          snapshotAddress: item,
+          substrateAddress: convertToSS58(dvmAddressToAccountId(item).toString(), SUBSTRATE_PREFIX),
+          crabAmount: genesisData.eth[item as ethKey],
         });
       });
 
       unclaimTron.forEach((item) => {
         dataSource.push({
-          key: item,
+          key: `tron-${item}`,
           snapshotAddress: item,
           substrateAddress: convertToSS58(dvmAddressToAccountId(`0x${item.slice(2)}`).toString(), SUBSTRATE_PREFIX),
           crabAmount: genesisData.tron[item as tronKey],
         });
       });
+
+      // check testing
+      // {
+      //   ethClaimed.forEach((item) => {
+      //     const foundDot = Object.keys(genesisData.dot).find(address => address.toLowerCase() === item[0].toLowerCase());
+      //     const foundEth = Object.keys(genesisData.eth).find(address => address.toLowerCase() === item[0].toLowerCase());
+
+      //     if (foundDot && genesisData.dot[foundDot as dotKey].toString() !== item[1].toString()) {
+      //       console.log('dot', item[0], item[1], genesisData.dot[foundDot as dotKey]);
+      //     } else if (foundEth && genesisData.eth[foundEth as ethKey].toString() !== item[1].toString()) {
+      //       console.log('eth', item[0], item[1], genesisData.eth[foundEth as ethKey]);
+      //     } else if (!(foundDot || foundEth)) {
+      //       console.log('dot && eth unfound', item[0]);
+      //     }
+      //   });
+
+      //   tronClaimed.forEach((item) => {
+      //     const found = Object.keys(genesisData.tron).find(address => `0x${address.slice(2)}`.toLowerCase() === item[0].toLowerCase());
+      //     if (found && genesisData.tron[found as tronKey].toString() !== item[1].toString()) {
+      //       console.log('tron', item[0], item[1], genesisData.tron[found as tronKey]);
+      //     } else if (!found) {
+      //       console.log('tron unfound', item[0]);
+      //     }
+      //   });
+
+      //   ethClaimed.forEach((item) => {
+      //     if (item[0].toLowerCase() === '0xff7f274399c5040331a59e941b4971f31e15e47d'.toLowerCase()) {
+      //       console.log('amount:', item[1]);
+      //     }
+      //   });
+
+      //   dataSource.forEach(item => {
+      //     if ('0xff7f274399c5040331a59e941b4971f31e15e47d' === item.snapshotAddress) {
+      //       console.log('yes', item.crabAmount);
+      //     }
+      //   });
+      // }
+
+      setTotalClaimedAirdrop(
+        ethClaimed
+          .reduce((acc, cur) => acc.add(cur[1]), Big(0))
+          .add(tronClaimed.reduce((acc, cur) => acc.add(cur[1]), Big(0)))
+      );
+
+      setTotalUnclaimAirdrop(dataSource.reduce((acc, cur) => acc.add(cur.crabAmount), Big(0)));
     }
 
     setLoading(false);
 
-    return { dataSource, unclaimEth, unclaimTron };
+    return { dataSource, unclaimEth, unclaimDot, unclaimTron };
   }, [ethClaimed, tronClaimed]);
 
   const handleExport = () => {
@@ -146,14 +218,42 @@ const Page = () => {
   return (
     <PageLayout>
       <PageContent>
-        <div className="flex items-end justify-end space-x-24 mb-2">
-          <div className="flex items-center space-x-6">
-            <Statistic loading={loading} title="Total ETH Addresses" value={unclaimEth.length} />
-            <Statistic loading={loading} title="Total TRON Addresses" value={unclaimTron.length} />
-            <Statistic loading={loading} title="Total Addresses" value={dataSource.length} />
+        <div className="flex items-end justify-end space-x-2 mb-2">
+          <div className="flex items-end space-x-6">
             <Statistic
               loading={loading}
-              title="Total Airdrop (CRAB)"
+              title="Total Genesis Addresses"
+              value={
+                Object.keys(genesisData.dot).length +
+                Object.keys(genesisData.eth).length +
+                Object.keys(genesisData.tron).length
+              }
+            />
+            <Statistic
+              loading={loading}
+              title="Total Claimed Addresses"
+              value={ethClaimed.length + tronClaimed.length}
+            />
+            <Statistic loading={loading} title="Total Unclaim Addresses" value={dataSource.length} />
+            <Statistic
+              loading={loading}
+              title="Total Unclaim ETH Addresses"
+              value={unclaimDot.length + unclaimEth.length}
+            />
+            <Statistic loading={loading} title="Total Unclaim TRON Addresses" value={unclaimTron.length} />
+            <Statistic
+              loading={loading}
+              title="Total Claimed Airdrop (CRAB)"
+              value={totalClaimedAirdrop.div(CRAB_PRECISIONS).toFixed(4)}
+            />
+            <Statistic
+              loading={loading}
+              title="Total Unclaim Airdrop (CRAB)"
+              value={totalUnclaimAirdrop.div(CRAB_PRECISIONS).toFixed(4)}
+            />
+            <Statistic
+              loading={loading}
+              title="Total Genesis Airdrop (CRAB)"
               value={genesisTotalAirdrop.div(CRAB_PRECISIONS).toFixed(4)}
             />
           </div>
