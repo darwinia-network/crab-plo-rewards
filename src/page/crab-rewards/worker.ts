@@ -1,6 +1,11 @@
 import { transformRewardsData } from '../../utils';
 
-onmessage = (ev) => {
-  const result = transformRewardsData(ev.data[0], ev.data[1]);
+onmessage = () => {
+  const crowdloanWhoStatistics = require('./data/crowdloanWhoStatistics.json');
+  const crowdloanReferStatistics = require('./data/crowdloanReferStatistics.json');
+  const result = transformRewardsData(
+    crowdloanWhoStatistics.data.crowdloanWhoStatistics.nodes,
+    crowdloanReferStatistics.data.crowdloanReferStatistics.nodes
+  );
   postMessage(result);
 };

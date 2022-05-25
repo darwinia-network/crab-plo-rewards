@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Statistic, Breadcrumb, notification, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { useApolloClient } from '@apollo/client';
 import { RewardsTable } from './RewardsTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { downloadCsv } from '../../utils';
-import { GET_CONTRIBUTORS_POWER, GET_REFERRALS_POWER, CRAB_REWARD, CKTON_REWARD } from '../../config';
+import { CRAB_REWARD, CKTON_REWARD } from '../../config';
 import { TypeRewardsTableDataSource } from '../../type';
 import { useNavigate } from 'react-router-dom';
 
 const Page: React.FC = () => {
-  const client = useApolloClient();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [csvRows, setCsvRows] = useState<string[][]>([]);
@@ -23,34 +21,6 @@ const Page: React.FC = () => {
   const handleClickCheckAll = async () => {
     try {
       setLoading(true);
-
-      const powerReferrals = await client.query({
-        query: GET_REFERRALS_POWER,
-        variables: { first: 0, offset: 0 },
-      });
-      const powerContributors = await client.query({
-        query: GET_CONTRIBUTORS_POWER,
-        variables: { first: 0, offset: 0 },
-      });
-
-      if (
-        powerReferrals.data?.crowdloanReferStatistics.totalCount !==
-        powerReferrals.data?.crowdloanReferStatistics.nodes.length
-      ) {
-        notification.warning({
-          message: 'Query Subql As referral',
-          description: 'nodes length doesnt equal to total count',
-        });
-      }
-      if (
-        powerContributors.data?.crowdloanWhoStatistics.totalCount !==
-        powerContributors.data?.crowdloanWhoStatistics.nodes.length
-      ) {
-        notification.warning({
-          message: 'Query Subql As Contributor',
-          description: 'nodes length doesnt equal to total count',
-        });
-      }
 
       const worker = new Worker(new URL('./worker.ts', import.meta.url));
       worker.onerror = (err) => {
@@ -69,10 +39,7 @@ const Page: React.FC = () => {
         setRewardsTableDataSource(rewardsTableDataSource);
         setLoading(false);
       };
-      worker.postMessage([
-        powerContributors.data?.crowdloanWhoStatistics.nodes || [],
-        powerReferrals.data?.crowdloanReferStatistics.nodes || [],
-      ]);
+      worker.postMessage('');
     } catch (err) {
       console.error(err);
       notification.error({
