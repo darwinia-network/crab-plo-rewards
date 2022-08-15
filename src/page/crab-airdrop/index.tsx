@@ -74,7 +74,7 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (!(api.query.claims.claimsFromEth && api.query.claims.claimsFromTron)) {
+    if (!(api.query.claims?.claimsFromEth && api.query.claims?.claimsFromTron)) {
       return;
     }
 
