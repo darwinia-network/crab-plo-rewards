@@ -74,9 +74,13 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
+    if (!(api.query.claims.claimsFromEth && api.query.claims.claimsFromTron)) {
+      return;
+    }
+
     setLoading(true);
 
-    combineLatest(
+    const sub$$ = combineLatest(
       [api.query.claims.claimsFromEth.entries(...[]), api.query.claims.claimsFromTron.entries(...[])],
       (eth, tron) => [
         eth.map((item) => [item[0].toHuman()?.toString(), item[1].toString()]),
@@ -88,6 +92,8 @@ const Page = () => {
 
       setLoading(false);
     });
+
+    return () => sub$$.unsubscribe();
   }, [api]);
 
   const { dataSource, unclaimDot, unclaimEth, unclaimTron } = useMemo(() => {
