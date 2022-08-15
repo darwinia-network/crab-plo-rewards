@@ -4,8 +4,9 @@ import { GET_USERS_NFT_CLAIMED } from '../../config';
 import { NftTable } from '../../component/NftTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { downloadCsv } from '../../utils';
-import { Button, Statistic, Breadcrumb, notification } from 'antd';
+import { Button, Statistic, Breadcrumb, Tooltip, notification } from 'antd';
 import { data as nftEligibleData } from './data';
+import { statistics as statisticsData } from './statistics';
 import type { TypeNftTableDataSource, TypeGetUsersNftClaimed } from '../../type';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ const Page: React.FC = () => {
   const [csvRowsTotal, setCsvRowsTotal] = useState<string[][]>([]);
   const [csvRowsClaimed, setCsvRowsClaimed] = useState<string[][]>([]);
   const [csvRowsUnclaim, setCsvRowsUnclaim] = useState<string[][]>([]);
+  const [csvRowsNewClaim, setCsvRowsNewClaim] = useState<string[][]>([]);
   const [loading, setLoading] = useState(false);
   const [disabledCheck, setDisabledCheck] = useState(false);
   const [nftTableDataSource, setNftTableDataSource] = useState<TypeNftTableDataSource[]>([]);
@@ -69,6 +71,7 @@ const Page: React.FC = () => {
       setCsvRowsTotal(transformed.csvRowsTotal);
       setCsvRowsClaimed(transformed.csvRowsClaimed);
       setCsvRowsUnclaim(transformed.csvRowsUnclaim);
+      setCsvRowsNewClaim(transformed.csvRowsNewClaim);
       setNftTableDataSource(transformed.nftTableDataSource);
 
       setDisabledCheck(true);
@@ -107,14 +110,32 @@ const Page: React.FC = () => {
     );
   };
 
+  const handleNewClaim = () => {
+    downloadCsv(
+      [['Contribute的地址', '接收NFT的地址', 'Contribute数量']]
+        .concat(csvRowsNewClaim)
+        .map((v) => v.join(','))
+        .join('\n'),
+      'crab-nft-claimed-new.csv'
+    );
+  };
+
   return (
     <PageLayout>
       <PageContent>
         <div className="flex items-end justify-end space-x-24 mb-2">
           <div className="flex items-center space-x-6">
             <Statistic loading={loading} title="Total NFT Eligible" value={nftEligibleData.length} />
-            <Statistic loading={loading} title="Total Claimed" value={csvRowsClaimed.length} />
-            <Statistic loading={loading} title="Total Unclaim" value={csvRowsUnclaim.length} />
+            <Statistic
+              loading={loading}
+              title={<Tooltip title="Last Time / Current">Total Claimed</Tooltip>}
+              value={`${statisticsData.filter((item) => item[1] === 1).length}/${csvRowsClaimed.length}`}
+            />
+            <Statistic
+              loading={loading}
+              title={<Tooltip title="Last Time / Current">Total Unclaim</Tooltip>}
+              value={`${statisticsData.filter((item) => item[1] === 0).length}/${csvRowsUnclaim.length}`}
+            />
           </div>
           <div className="flex justify-end items-end space-x-2">
             <Button
@@ -149,6 +170,14 @@ const Page: React.FC = () => {
               disabled={csvRowsTotal.length === 0}
             >
               Export Total
+            </Button>
+            <Button
+              className="rounded-md"
+              onClick={handleNewClaim}
+              loading={loading}
+              disabled={csvRowsNewClaim.length === 0}
+            >
+              New Claim
             </Button>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { NftClaimNetworks } from '../../type';
 
 onmessage = (ev) => {
   const { data } = require('./data');
-  const result = transformNftsData(data, ev.data, NftClaimNetworks.DARWINIA);
+  const { statistics } = require('./statistics');
+  const result = transformNftsData(data, statistics, ev.data, NftClaimNetworks.DARWINIA);
   postMessage(result);
 };

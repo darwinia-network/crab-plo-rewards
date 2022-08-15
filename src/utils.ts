@@ -183,10 +183,16 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
   };
 };
 
-export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimedNode[], network: NftClaimNetworks) => {
+export const transformNftsData = (
+  data: string[][],
+  statistics: [string, number][],
+  nodes: TypeGetUserNftClaimedNode[],
+  network: NftClaimNetworks
+) => {
   const csvRowsTotal: string[][] = [];
   const csvRowsClaimed: string[][] = [];
   const csvRowsUnclaim: string[][] = [];
+  const csvRowsNewClaim: string[][] = [];
   let nftTableDataSource: TypeNftTableDataSource[] = [];
 
   const precision = network === NftClaimNetworks.CRAB ? KSM_PRECISIONS : DOT_PRECISIONS;
@@ -206,6 +212,15 @@ export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimed
     claim && ethers.utils.isAddress(claim.addressValue)
       ? csvRowsClaimed.push([value[0], claim.addressValue, contribute])
       : csvRowsUnclaim.push([value[0], contribute]);
+
+    const statisticsItem = statistics.find((v) => v[0] === value[0]);
+    if (statisticsItem) {
+      if (claim && statisticsItem[1] === 0) {
+        csvRowsNewClaim.push([value[0], claim.addressValue, contribute]);
+      }
+    } else {
+      console.warn(`[Statistics]${value[0]} not found in`);
+    }
   }
 
   nftTableDataSource = nftTableDataSource.map((value, index) => ({
@@ -219,5 +234,6 @@ export const transformNftsData = (data: string[][], nodes: TypeGetUserNftClaimed
     csvRowsTotal,
     csvRowsClaimed,
     csvRowsUnclaim,
+    csvRowsNewClaim,
   };
 };
