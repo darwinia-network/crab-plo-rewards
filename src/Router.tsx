@@ -5,7 +5,7 @@ import { PageLoading } from './component/PageLoading';
 import { ApiProvider } from './provider';
 
 const crabNftClaimGqlClient = new ApolloClient({
-  uri: 'https://api.subquery.network/sq/JayJay1024/crab-nft',
+  uri: 'https://api.subquery.network/sq/hhhx2048/crab-nft',
   cache: new InMemoryCache(),
 });
 
