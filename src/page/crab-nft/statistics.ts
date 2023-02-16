@@ -38,7 +38,7 @@ export const statistics = [
   ['GRyA3KbpQaX46JYizPDnz5qFwq4USBFoDLFHwKXaNP1hP7J', 0],
   ['FrMQmNkZtxMP5Hfh3NLWupcJdzCoB9YgY99Aj6kzDJ8oXxx', 0],
   ['HjtDiyd4A7wG8Dz54Nkrze1B5AGbXGJbfhr6qiMQv4tVRvh', 1],
-  ['EcijEbfSeenq5GoGC5PCQdBt6fQfv6zM9p3wZX4Vgc9RCzZ', 0],
+  ['EcijEbfSeenq5GoGC5PCQdBt6fQfv6zM9p3wZX4Vgc9RCzZ', 1],
   ['DGamziWDPU617yC1pFQh9kFrVPqYaEUCJGBPTqscTWdv9c9', 0],
   ['DTHzTvEzmPdi6KJ3JCUuTmy1oGdGXRs4EXwGhPdnkF4iCW1', 0],
   ['EoaQkYN8fbSNmPjtpv8RgKnBv6UCUEJ3ZN65e8URoyL5gL7', 0],
