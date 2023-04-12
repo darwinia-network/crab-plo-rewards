@@ -5,9 +5,16 @@ import type { Codec, DetectCodec } from '@polkadot/types/types';
 import { Keyring } from '@polkadot/keyring';
 import Big from 'big.js';
 import { ethers } from 'ethers';
-import { CRAB_REWARD, CKTON_REWARD, DOT_PRECISIONS, KSM_PRECISIONS, STAGE_REWARDS_RATE } from './config';
+import {
+  CRAB_REWARD,
+  CKTON_REWARD,
+  DOT_PRECISIONS,
+  KSM_PRECISIONS,
+  STAGE_REWARDS_RATE,
+  SUBSTRATE_PREFIX,
+} from './config';
 import type {
-  TypeGetUserNftClaimedNode,
+  TypeGetUserNftClaimRemarkNode,
   TypeContributorsNode,
   TypeReferralsNode,
   TypeRewardsTableDataSource,
@@ -186,7 +193,7 @@ export const transformRewardsData = (nodesContributor: TypeContributorsNode[], n
 export const transformNftsData = (
   data: string[][],
   statistics: [string, number][],
-  nodes: TypeGetUserNftClaimedNode[],
+  nodes: TypeGetUserNftClaimRemarkNode[],
   network: NftClaimNetworks
 ) => {
   const csvRowsTotal: string[][] = [];
@@ -198,7 +205,9 @@ export const transformNftsData = (
   const precision = network === NftClaimNetworks.CRAB ? KSM_PRECISIONS : DOT_PRECISIONS;
 
   for (let value of data) {
-    const claim = nodes?.find((v) => v.signer === value[0]);
+    const claim = nodes?.find(
+      (v) => convertToSS58(v.signer, SUBSTRATE_PREFIX) === convertToSS58(value[0], SUBSTRATE_PREFIX)
+    );
     const contribute = Big(value[1]).div(precision).toFixed(8);
     nftTableDataSource.push({
       key: 0,

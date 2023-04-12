@@ -10,18 +10,19 @@ export type TypeContributorsNode = {
   totalBalance: string;
 };
 
-export type TypeGetUserNftClaimedNode = {
+export type TypeGetUserNftClaimRemarkNode = {
   signer: string;
   addressValue: string;
   extrinsicHash: string;
 };
 
-export type TypeGetUsersNftClaimed = {
+export type TypeGetUsersNFTClaimRemark = {
   totalCount: number;
   pageInfo: {
     hasNextPage: boolean;
+    endCursor: string;
   };
-  nodes: TypeGetUserNftClaimedNode[];
+  edges: { node: TypeGetUserNftClaimRemarkNode }[];
 };
 
 export type TypeRewardsTableDataSource = {

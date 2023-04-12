@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { GET_USERS_NFT_CLAIMED } from '../../config';
+import { GET_USERS_CLAIM_REMARKS, GET_USERS_CLAIM_REMARKS_TRY } from '../../config';
 import { NftTable } from '../../component/NftTable';
 import { PageLayout, PageContent, PageFooter } from '../../component';
 import { downloadCsv } from '../../utils';
 import { Button, Statistic, Breadcrumb, Tooltip, notification } from 'antd';
 import { data as nftEligibleData } from './data';
 import { statistics as statisticsData } from './statistics';
-import type { TypeNftTableDataSource, TypeGetUsersNftClaimed } from '../../type';
+import type { TypeNftTableDataSource, TypeGetUsersNFTClaimRemark } from '../../type';
 import { useNavigate } from 'react-router-dom';
 
 const Page: React.FC = () => {
@@ -22,19 +22,22 @@ const Page: React.FC = () => {
   const [disabledCheck, setDisabledCheck] = useState(false);
   const [nftTableDataSource, setNftTableDataSource] = useState<TypeNftTableDataSource[]>([]);
 
-  const getUsersNftClaimed = async (offset: number): Promise<TypeGetUsersNftClaimed> => {
-    const result: TypeGetUsersNftClaimed = { totalCount: 0, pageInfo: { hasNextPage: false }, nodes: [] };
+  const getUsersClaimRemarks = async (after?: string): Promise<TypeGetUsersNFTClaimRemark> => {
+    const result: TypeGetUsersNFTClaimRemark = {
+      totalCount: 0,
+      pageInfo: { hasNextPage: false, endCursor: '' },
+      edges: [],
+    };
     try {
+      const variables = after ? { first: 50, after } : { first: 50 };
+      const query = after ? GET_USERS_CLAIM_REMARKS : GET_USERS_CLAIM_REMARKS_TRY;
       const { data } = await client.query({
-        variables: {
-          first: 50,
-          offset: offset,
-        },
-        query: GET_USERS_NFT_CLAIMED,
+        variables,
+        query,
       });
-      result.totalCount = data?.remarkedNftAddresses?.totalCount || 0;
-      result.pageInfo = data?.remarkedNftAddresses?.pageInfo || { hasNextPage: false };
-      result.nodes = result.nodes.concat(data?.remarkedNftAddresses?.nodes || []);
+      result.totalCount = data?.claimRemarksConnection?.totalCount || 0;
+      result.pageInfo = data?.claimRemarksConnection?.pageInfo || { hasNextPage: false };
+      result.edges = result.edges.concat(data?.claimRemarksConnection?.edges || []);
     } catch (err) {
       console.error(err);
       notification.warning({
@@ -48,16 +51,20 @@ const Page: React.FC = () => {
   const handleClickCheckClaim = async () => {
     setLoading(true);
 
-    const claimeds = await getUsersNftClaimed(0);
-    while (claimeds.pageInfo.hasNextPage) {
-      const c = await getUsersNftClaimed(claimeds.nodes.length);
-      if (c.totalCount === 0 || c.nodes.length === 0) {
+    const remarks = await getUsersClaimRemarks();
+    while (remarks.pageInfo.hasNextPage) {
+      const c = await getUsersClaimRemarks(remarks.pageInfo.endCursor);
+      if (c.totalCount === 0 || c.edges.length === 0) {
         break;
       }
-      claimeds.totalCount = c.totalCount;
-      claimeds.pageInfo = c.pageInfo;
-      claimeds.nodes = claimeds.nodes.concat(c.nodes);
+      remarks.totalCount = c.totalCount;
+      remarks.pageInfo = c.pageInfo;
+      remarks.edges = remarks.edges.concat(c.edges);
     }
+    notification.info({
+      message: 'Fetching Completed',
+      description: `Edges: ${remarks.edges.length}`,
+    });
 
     const worker = new Worker(new URL('./worker.ts', import.meta.url));
     worker.onerror = (err) => {
@@ -77,7 +84,7 @@ const Page: React.FC = () => {
       setDisabledCheck(true);
       setLoading(false);
     };
-    worker.postMessage(claimeds.nodes);
+    worker.postMessage(remarks.edges.map(({ node }) => node));
   };
 
   const handleClickExportClaimed = () => {

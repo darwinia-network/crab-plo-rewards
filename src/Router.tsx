@@ -5,12 +5,12 @@ import { PageLoading } from './component/PageLoading';
 import { ApiProvider } from './provider';
 
 const crabNftClaimGqlClient = new ApolloClient({
-  uri: 'https://api.subquery.network/sq/hhhx2048/crab-nft',
+  uri: 'https://squid.subsquid.io/crab-nft-squid/v/v1/graphql',
   cache: new InMemoryCache(),
 });
 
 const darwiniaNftClaimGqlClient = new ApolloClient({
-  uri: 'https://api.subquery.network/sq/JayJay1024/darwinia-nft',
+  uri: 'https://squid.subsquid.io/darwinia-nft-squid/v/v1/graphql',
   cache: new InMemoryCache(),
 });
 

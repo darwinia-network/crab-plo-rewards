@@ -10,17 +10,39 @@ export const KSM_PRECISIONS = new Big('1000000000000');
 export const CRAB_PRECISIONS = new Big('1000000000');
 export const SUBSTRATE_PREFIX = 42;
 
-export const GET_USERS_NFT_CLAIMED = gql`
-  query GetUserNftClaimed($first: Int!, $offset: Int!) {
-    remarkedNftAddresses(orderBy: [EXTRINSIC_TIMESTAMP_ASC], first: $first, offset: $offset) {
+export const GET_USERS_CLAIM_REMARKS = gql`
+  query GetUserClaimRemarks($first: Int!, $after: String!) {
+    claimRemarksConnection(orderBy: [blockNumber_ASC], first: $first, after: $after) {
       totalCount
       pageInfo {
         hasNextPage
+        endCursor
       }
-      nodes {
-        signer
-        addressValue
-        extrinsicHash
+      edges {
+        node {
+          signer
+          addressValue
+          extrinsicHash
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USERS_CLAIM_REMARKS_TRY = gql`
+  query GetUserClaimRemarks($first: Int!) {
+    claimRemarksConnection(orderBy: [blockNumber_ASC], first: $first) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          signer
+          addressValue
+          extrinsicHash
+        }
       }
     }
   }
