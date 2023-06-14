@@ -2433,7 +2433,7 @@ export const statistics = [
   ['12brHgFJPFHCW6T8LEbJLF6qQKvEk9JubtKqHN8NV6gdRTom', 0],
   ['12bRNLroAS9J2YCxM5W8oodKy3ZwNpvwuGCDvbrGWT5imnhH', 0],
   ['12Bsh2u72k5d4sUQDRmSMJZjJnC6CccAXCaUYv1bNQ3iuS7Z', 0],
-  ['12BTQxGhgasip4pSxJA6AFYNHnLuQvsLLgod6VRzRxP4eTxW', 0],
+  ['12BTQxGhgasip4pSxJA6AFYNHnLuQvsLLgod6VRzRxP4eTxW', 1],
   ['12btxHXpC8jMqriPZ4oL8xAjD88MKYQHrWoNdUoTqYbkk3eg', 0],
   ['12bULnXsxGhoF7rHFSfM9RyCVQXLmeUmsvpC2imYcBJfZuLR', 0],
   ['12Bv3sGcoCPtB32JGaf6uqU2o4BGKL8hVDiRE7X3aPmNu5sB', 1],
